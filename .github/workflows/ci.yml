@@ -23,23 +23,23 @@ jobs:
         run: go mod tidy
       - name: Linting
         run: go fmt ./cmd/ ./pkg/server/
-  # test:
-  #   name: "Test"
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       shell: sh
-  #   steps:
-  #     - name: Checkout codebase
-  #       uses: actions/checkout@v4
-  #     - name: Setup Go
-  #       uses: actions/setup-go@v5
-  #       with:
-  #         go-version: 1.22.1
-  #     - name: Install dependencies
-  #       run: go mod tidy
-  #     - name: Linting
-  #       run: go fmt
+  test:
+    name: "Test"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: sh
+    steps:
+      - name: Checkout codebase
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.22.1
+      - name: Install dependencies
+        run: go mod tidy
+      - name: Run Unit Tests
+        run: go test ./pkg/server
   # build:
   #   name: "Build"
   #   runs-on: ubuntu-latest
