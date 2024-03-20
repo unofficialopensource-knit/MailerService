@@ -22,5 +22,6 @@ func AppFactory(mode string) *gin.Engine {
 
 	router := gin.Default()
 	router.GET("/ping", PingHandler)
+	router.POST("/mail", MailHandler)
 	return router
 }
