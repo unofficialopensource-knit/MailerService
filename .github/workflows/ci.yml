@@ -1,0 +1,63 @@
+name: "MR Pipeline"
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: "Lint"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: sh
+    steps:
+      - name: Checkout codebase
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.22.1
+      - name: Install dependencies
+        run: go mod tidy
+      - name: Linting
+        run: go fmt ./cmd/ ./pkg/server/
+  test:
+    name: "Test"
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+    defaults:
+      run:
+        shell: sh
+    steps:
+      - name: Checkout codebase
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.22.1
+      - name: Install dependencies
+        run: go mod tidy
+      - name: Run Unit Tests
+        run: go test ./pkg/server
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    needs:
+      - test
+    defaults:
+      run:
+        shell: sh
+    steps:
+      - name: Checkout codebase
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.22.1
+      - name: Install dependencies
+        run: go mod tidy
+      - name: Build
+        run: go build -tags jsoniter -o bin/mailer cmd/main.go
