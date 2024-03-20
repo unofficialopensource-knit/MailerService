@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  server:
+    image: mailer:latest
+    entrypoint: /code/mailer
+    env_file:
+      - ../.env
+    ports:
+      - 8001:8000
+    build:
+      context: ../
+      dockerfile: build/Dockerfile
