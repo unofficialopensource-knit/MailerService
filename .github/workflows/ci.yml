@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: go mod tidy
       - name: Linting
-        run: go fmt
+        run: go fmt ./cmd/ ./pkg/server/
   # test:
   #   name: "Test"
   #   runs-on: ubuntu-latest
