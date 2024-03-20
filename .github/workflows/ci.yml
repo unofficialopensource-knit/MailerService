@@ -1,4 +1,4 @@
-name: "MR Pipeline"
+name: Pipeline
 
 on:
   pull_request:
@@ -7,8 +7,9 @@ on:
 
 jobs:
   lint:
-    name: "Lint"
+    name: Lint
     runs-on: ubuntu-latest
+    if: ${{ startsWith(github.base_ref, 'refs/heads/feature') || startsWith(github.base_ref, 'refs/heads/fix') || startsWith(github.base_ref, 'refs/heads/dependabot') }}
     defaults:
       run:
         shell: sh
@@ -24,7 +25,7 @@ jobs:
       - name: Linting
         run: go fmt ./cmd/ ./pkg/server/
   test:
-    name: "Test"
+    name: Test
     runs-on: ubuntu-latest
     needs:
       - lint
@@ -43,7 +44,7 @@ jobs:
       - name: Run Unit Tests
         run: go test ./pkg/server
   build:
-    name: "Build"
+    name: Build
     runs-on: ubuntu-latest
     needs:
       - test
