@@ -60,4 +60,4 @@ jobs:
       - name: Install dependencies
         run: go mod tidy
       - name: Build
-        run: go build -tags jsoniter ./cmd/
+        run: go build -tags jsoniter -o bin/mailer cmd/main.go
