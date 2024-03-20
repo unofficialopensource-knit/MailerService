@@ -1,4 +1,4 @@
-name: Pipeline
+name: Build
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
-    if: ${{ startsWith(github.base_ref, 'refs/heads/feature') || startsWith(github.base_ref, 'refs/heads/fix') || startsWith(github.base_ref, 'refs/heads/dependabot') }}
+    if: ${{ startsWith(github.head_ref, 'feature') || startsWith(github.head_ref, 'fix') || startsWith(github.head_ref, 'dependabot') }}
     defaults:
       run:
         shell: sh
