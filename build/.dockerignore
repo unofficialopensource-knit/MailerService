@@ -1,0 +1,9 @@
+.git/
+.vscode/
+api/
+build/
+test/
+
+*.env
+.*ignore
+*.md
