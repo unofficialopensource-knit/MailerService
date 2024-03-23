@@ -20,7 +20,7 @@ func MailHandler(ctx *gin.Context) {
 		return
 	}
 
-	go SendMail(payload)
+	SendMail(payload)
 
 	ctx.Status(http.StatusNoContent)
 }
