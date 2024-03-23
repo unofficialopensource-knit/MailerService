@@ -1,12 +1,9 @@
-name: Build
+name: Push
 
 on:
-  pull_request:
+  push:
     branches:
       - main
-  # push:
-  #   branches:
-  #     - main
 
 jobs:
   push:
@@ -45,8 +42,7 @@ jobs:
       - name: Build & Push
         uses: docker/build-push-action@v5
         with:
-          # context: .
           file: build/Dockerfile
-          # push: true
+          push: true
           # platforms: linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
