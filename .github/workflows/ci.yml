@@ -5,7 +5,8 @@ on:
     branches:
       - main
   push:
-    - main
+    branches:
+      - main
 
 jobs:
   lint:
