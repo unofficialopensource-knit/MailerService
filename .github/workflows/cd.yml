@@ -1,4 +1,4 @@
-name: Build
+name: Push
 
 on:
   push:
@@ -42,7 +42,7 @@ jobs:
       - name: Build & Push
         uses: docker/build-push-action@v5
         with:
-          context: .
+          file: build/Dockerfile
           push: true
           # platforms: linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
