@@ -4,6 +4,8 @@ on:
   pull_request:
     branches:
       - main
+  push:
+    - main
 
 jobs:
   lint:
@@ -62,10 +64,19 @@ jobs:
         run: go mod tidy
       - name: Build
         run: go build -tags jsoniter -o bin/mailer cmd/main.go
+  debug:
+    name: Debug
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: sh
+    steps:
+      - name: Debug
+        run: ${{ github.event.push.ref }}
   push:
     name: Push
     runs-on: ubuntu-latest
-    if: ${{ startsWith(github.base_ref, 'main') }}
+    if: ${{ github.event.push.ref == "main" }}
     defaults:
       run:
         shell: sh
