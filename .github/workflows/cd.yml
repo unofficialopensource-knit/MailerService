@@ -37,9 +37,7 @@ jobs:
         with:
           images: 976750617193.dkr.ecr.ap-south-1.amazonaws.com/wecoach-mailer-service
           tags: type=sha
-      - name: Build & Push
-        uses: docker/build-push-action@v5
-        with:
-          file: build/Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
+      - name: Build
+        run: docker image build --file build/Dockerfile --tag ${{ steps.meta.outputs.tags }} .
+      - name: Push
+        run: docker image push ${{ steps.meta.outputs.tags }}
