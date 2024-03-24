@@ -6,6 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func PingHandler(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{"ping": "pong"})
+func HealthHandler(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, gin.H{"message": "healthy"})
 }

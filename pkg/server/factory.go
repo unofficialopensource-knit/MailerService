@@ -21,6 +21,6 @@ func AppFactory(mode string) *gin.Engine {
 	gin.DisableConsoleColor()
 
 	router := gin.Default()
-	router.GET("/ping", PingHandler)
+	router.GET("/health", HealthHandler)
 	return router
 }
