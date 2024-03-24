@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  lint:
-    name: Lint
+  set-up:
+    name: Set-Up
     runs-on: ubuntu-latest
     if: ${{ startsWith(github.head_ref, 'feature') || startsWith(github.head_ref, 'fix') || startsWith(github.head_ref, 'dependabot') }}
     defaults:
@@ -22,8 +22,23 @@ jobs:
           go-version: 1.22.1
       - name: Install dependencies
         run: go mod tidy
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    needs:
+      - set-up
+    defaults:
+      run:
+        shell: sh
+    steps:
+      - name: Checkout codebase
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.22.1
       - name: Linting
-        run: go fmt ./cmd/ ./pkg/server/
+        run: go fmt ./cmd/
   test:
     name: Test
     runs-on: ubuntu-latest
@@ -39,8 +54,6 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: 1.22.1
-      - name: Install dependencies
-        run: go mod tidy
       - name: Run Unit Tests
         run: go test ./pkg/server
   build:
@@ -58,7 +71,5 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: 1.22.1
-      - name: Install dependencies
-        run: go mod tidy
       - name: Build
         run: go build -tags jsoniter -o bin/mailer cmd/main.go
