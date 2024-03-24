@@ -17,4 +17,4 @@ WORKDIR /code
 
 COPY --from=builder /code/bin/mailer .
 
-ENTRYPOINT ["mailer"]
+ENTRYPOINT ["/code/mailer"]
