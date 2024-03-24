@@ -27,12 +27,8 @@ jobs:
           ecr: true
           logout: true
           registry: 976750617193.dkr.ecr.ap-south-1.amazonaws.com
-      # - name: Set up QEMU
-      #   uses: docker/setup-qemu-action@v3
-      # - name: Set up Docker Buildx
-      #   uses: docker/setup-buildx-action@v3
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
@@ -44,5 +40,4 @@ jobs:
         with:
           file: build/Dockerfile
           push: true
-          # platforms: linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
