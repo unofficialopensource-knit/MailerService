@@ -4,11 +4,10 @@ import (
 	"log"
 
 	"github.com/unofficialopensource-knit/MailerService/pkg/factory"
-	"github.com/unofficialopensource-knit/MailerService/pkg/schema"
 )
 
 func main() {
-	conf, err := schema.LoadConfig()
+	conf, err := factory.Config()
 	if err != nil {
 		log.Panicf("Got error while loading config %v", err.Error())
 	}
