@@ -12,6 +12,8 @@ jobs:
     defaults:
       run:
         shell: sh
+    outputs:
+      image_tag: ${{ steps.meta.outputs.tags }}
     steps:
       - name: Checkout codebase
         uses: actions/checkout@v4
