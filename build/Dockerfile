@@ -16,3 +16,5 @@ FROM golang:1.22.1-alpine
 WORKDIR /code
 
 COPY --from=builder /code/bin/mailer .
+
+ENTRYPOINT ["mailer"]
