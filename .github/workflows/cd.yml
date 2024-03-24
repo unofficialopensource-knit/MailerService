@@ -12,6 +12,8 @@ jobs:
     defaults:
       run:
         shell: sh
+    outputs:
+      image_tag: ${{ steps.meta.outputs.tags }}
     steps:
       - name: Checkout codebase
         uses: actions/checkout@v4
@@ -33,7 +35,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: 976750617193.dkr.ecr.ap-south-1.amazonaws.com/wecoach-backend
+          images: 976750617193.dkr.ecr.ap-south-1.amazonaws.com/wecoach-mailer-service
           tags: type=sha
       - name: Build & Push
         uses: docker/build-push-action@v5
