@@ -1,61 +1,34 @@
 package main
 
 import (
-	"context"
 	"log"
-	"net/http"
-	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
-	"github.com/gin-gonic/gin"
-	"github.com/kelseyhightower/envconfig"
+	"golang.org/x/net/context"
+
+	"github.com/unofficialopensource-knit/MailerService/pkg/factory"
 )
 
-var routerLambda *ginadapter.GinLambda
-
-type Config struct {
-	Environment string `encvonfig:"environment"`
-	BindAddress string `envconfig:"bind_addr"`
-}
-
-func AppFactory(mode string) *gin.Engine {
-	switch strings.ToUpper(strings.TrimSpace(mode)) {
-	case "DEBUG":
-		gin.SetMode(gin.DebugMode)
-	case "TEST":
-		gin.SetMode(gin.TestMode)
-	case "RELEASE":
-		gin.SetMode(gin.ReleaseMode)
-	default:
-		panic("Mode not supported for running the server")
-	}
-
-	gin.DisableConsoleColor()
-
-	router := gin.Default()
-	router.GET("/health", HealthHandler)
-	return router
-}
-
-func HealthHandler(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{"message": "healthy"})
-}
+var ginLambda *ginadapter.GinLambda
 
 func main() {
-	var config Config
-	err := envconfig.Process("mailer", &config)
+	conf, err := factory.Config()
 	if err != nil {
 		log.Panicf("Got error while loading config %v", err.Error())
 	}
 
-	router := AppFactory(config.Environment)
-	routerLambda = ginadapter.New(router)
+	router := factory.App(conf.Environment)
 
-	lambda.Start(LambdaHandler)
+	if conf.Environment == "release" {
+		ginLambda = ginadapter.New(router)
+		lambda.Start(LambdaHandler)
+	} else {
+		router.Run(conf.BindAddress)
+	}
 }
 
-func LambdaHandler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	return routerLambda.ProxyWithContext(ctx, req)
+func LambdaHandler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	return ginLambda.ProxyWithContext(ctx, request)
 }
