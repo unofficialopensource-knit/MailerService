@@ -1,11 +1,12 @@
 package schema
 
-// type ServerConfig struct {
-// 	Identity string
-// 	Username string
-// 	Password string
-// 	Host     string
-// }
+type ServerConfig struct {
+	Identity string `json:"identity"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Host     string `json:"host"`
+	Port     string `json:"port"`
+}
 
 type ContactUsTplContext struct {
 	Name          string `json:"name"`
@@ -21,7 +22,7 @@ type MailSchema struct {
 }
 
 type MailRequestSchema struct {
-	// UseServerDefaultConfig bool `json:"useServerDefaultConfig" binding:"required"`
-	// CustomMailConfig       ServerConfig `json:"SMTPServerConfig"`
-	// Schema MailSchema `json:"schema" binding:"required"`
+	UseServerDefaultConfig bool         `json:"useServerDefaultConfig"`
+	CustomSMTPConfig       ServerConfig `json:"SMTPServerConfig"`
+	Schema                 MailSchema   `json:"schema" binding:"required"`
 }
