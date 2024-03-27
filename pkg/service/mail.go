@@ -19,6 +19,7 @@ func SendMail(payload schema.MailRequestSchema) {
 		log.Panicf("Got error while loading config %v", err.Error())
 	}
 
+	var templatePath string
 	var recipients []string
 	var templateContext map[string]string
 	switch payload.Schema.TemplateType {
@@ -33,6 +34,7 @@ func SendMail(payload schema.MailRequestSchema) {
 			"UserType":      payload.Schema.TemplateContext.UserType,
 			"Message":       payload.Schema.TemplateContext.Message,
 		}
+		templatePath = "templates/contact_us.html"
 	case "WELCOME_MAIL":
 		panic("Service not yet implemented")
 	default:
@@ -43,7 +45,7 @@ func SendMail(payload schema.MailRequestSchema) {
 	var body bytes.Buffer
 	body.Write([]byte(fmt.Sprintf("Subject: New Lead  \n%s\n\n", mimeHeaders)))
 
-	tpl, _ := template.ParseFiles("templates/contact_us.html")
+	tpl, _ := template.ParseFiles(templatePath)
 	tpl.Execute(&body, templateContext)
 
 	if payload.UseServerDefaultConfig {
