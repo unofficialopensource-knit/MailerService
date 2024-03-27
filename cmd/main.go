@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -25,7 +26,9 @@ func main() {
 		ginLambda = ginadapter.New(router)
 		lambda.Start(LambdaHandler)
 	} else {
+		fmt.Println("Low")
 		router.Run(conf.BindAddress)
+		fmt.Println("high")
 	}
 }
 

@@ -11,12 +11,12 @@ import (
 	"github.com/unofficialopensource-knit/MailerService/pkg/schema"
 )
 
-func HandleContactUs(config schema.Config, body schema.MailSchema) []string {
+func HandleContactUs(config schema.Config) []string {
 	recipients := []string{config.ContactUsDefaultRecipient}
 	return recipients
 }
 
-func SendMail(payload schema.MailRequestSchema) {
+func SendMail(payload schema.MailSchema) {
 	var conf schema.Config
 	err := envconfig.Process("mailer", &conf)
 
@@ -26,17 +26,17 @@ func SendMail(payload schema.MailRequestSchema) {
 
 	var recipients []string
 	var templateContext map[string]string
-	switch payload.Schema.TemplateType {
+	switch payload.TemplateType {
 	case "FORGOT_PASSWORD":
 		panic("Service not yet implemented")
 	case "CONTACT_US":
-		recipients = HandleContactUs(conf, payload.Schema)
+		recipients = HandleContactUs(conf)
 		templateContext = map[string]string{
-			"Name":          payload.Schema.TemplateContext.Name,
-			"Email":         payload.Schema.TemplateContext.Email,
-			"ContactNumber": payload.Schema.TemplateContext.ContactNumber,
-			"UserType":      payload.Schema.TemplateContext.UserType,
-			"Message":       payload.Schema.TemplateContext.Message,
+			"Name":          payload.TemplateContext.Name,
+			"Email":         payload.TemplateContext.Email,
+			"ContactNumber": payload.TemplateContext.ContactNumber,
+			"UserType":      payload.TemplateContext.UserType,
+			"Message":       payload.TemplateContext.Message,
 		}
 	case "WELCOME_MAIL":
 		panic("Service not yet implemented")
@@ -51,12 +51,9 @@ func SendMail(payload schema.MailRequestSchema) {
 	tpl, _ := template.ParseFiles("templates/contact_us.html")
 	tpl.Execute(&body, templateContext)
 
-	if payload.UseServerDefaultConfig {
-		auth := smtp.PlainAuth(conf.SMTPIdentity, conf.SMTPUsername, conf.SMTPPassword, conf.SMTPHost)
-		err = smtp.SendMail(conf.SMTPHost+":"+conf.SMTPPort, auth, conf.SMTPUsername, recipients, body.Bytes())
-		if err != nil {
-			return
-		}
+	auth := smtp.PlainAuth(conf.SMTPIdentity, conf.SMTPUsername, conf.SMTPPassword, conf.SMTPHost)
+	err = smtp.SendMail(conf.SMTPHost+":"+conf.SMTPPort, auth, conf.SMTPUsername, recipients, body.Bytes())
+	if err != nil {
+		return
 	}
-	panic("Not supported custom SMTP Creds")
 }

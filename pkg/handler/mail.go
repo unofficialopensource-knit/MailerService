@@ -9,7 +9,7 @@ import (
 )
 
 func MailHandler(ctx *gin.Context) {
-	var payload schema.MailRequestSchema
+	var payload schema.MailSchema
 	err := ctx.ShouldBindJSON(&payload)
 	if err != nil {
 		ctx.Error(err)
