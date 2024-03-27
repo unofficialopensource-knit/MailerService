@@ -23,7 +23,7 @@ func App(mode string) *gin.Engine {
 
 	router := gin.Default()
 
-	router.GET("/health", handler.HealthHandler)
+	router.POST("/mail", handler.MailHandler)
 
 	return router
 }
