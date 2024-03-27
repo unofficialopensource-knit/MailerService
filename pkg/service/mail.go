@@ -11,12 +11,7 @@ import (
 	"github.com/unofficialopensource-knit/MailerService/pkg/schema"
 )
 
-func HandleContactUs(config schema.Config) []string {
-	recipients := []string{config.ContactUsDefaultRecipient}
-	return recipients
-}
-
-func SendMail(payload schema.MailSchema) {
+func SendMail(payload schema.MailRequestSchema) {
 	var conf schema.Config
 	err := envconfig.Process("mailer", &conf)
 
@@ -26,17 +21,17 @@ func SendMail(payload schema.MailSchema) {
 
 	var recipients []string
 	var templateContext map[string]string
-	switch payload.TemplateType {
+	switch payload.Schema.TemplateType {
 	case "FORGOT_PASSWORD":
 		panic("Service not yet implemented")
 	case "CONTACT_US":
-		recipients = HandleContactUs(conf)
+		recipients = []string{conf.ContactUsDefaultRecipient}
 		templateContext = map[string]string{
-			"Name":          payload.TemplateContext.Name,
-			"Email":         payload.TemplateContext.Email,
-			"ContactNumber": payload.TemplateContext.ContactNumber,
-			"UserType":      payload.TemplateContext.UserType,
-			"Message":       payload.TemplateContext.Message,
+			"Name":          payload.Schema.TemplateContext.Name,
+			"Email":         payload.Schema.TemplateContext.Email,
+			"ContactNumber": payload.Schema.TemplateContext.ContactNumber,
+			"UserType":      payload.Schema.TemplateContext.UserType,
+			"Message":       payload.Schema.TemplateContext.Message,
 		}
 	case "WELCOME_MAIL":
 		panic("Service not yet implemented")
@@ -51,9 +46,18 @@ func SendMail(payload schema.MailSchema) {
 	tpl, _ := template.ParseFiles("templates/contact_us.html")
 	tpl.Execute(&body, templateContext)
 
-	auth := smtp.PlainAuth(conf.SMTPIdentity, conf.SMTPUsername, conf.SMTPPassword, conf.SMTPHost)
-	err = smtp.SendMail(conf.SMTPHost+":"+conf.SMTPPort, auth, conf.SMTPUsername, recipients, body.Bytes())
-	if err != nil {
-		return
+	if payload.UseServerDefaultConfig {
+		serverAuth := smtp.PlainAuth(conf.SMTPIdentity, conf.SMTPUsername, conf.SMTPPassword, conf.SMTPHost)
+
+		err := smtp.SendMail(conf.SMTPHost+":"+conf.SMTPPort, serverAuth, conf.SMTPUsername, recipients, body.Bytes())
+		if err != nil {
+			log.Panicf("Got error while sending mail via SMTP")
+		}
+	} else {
+		clientAuth := smtp.PlainAuth(payload.CustomSMTPConfig.Identity, payload.CustomSMTPConfig.Username, payload.CustomSMTPConfig.Password, payload.CustomSMTPConfig.Host)
+		err := smtp.SendMail(payload.CustomSMTPConfig.Host+":"+payload.CustomSMTPConfig.Port, clientAuth, payload.CustomSMTPConfig.Username, recipients, body.Bytes())
+		if err != nil {
+			log.Panicf("Got error while sending mail via SMTP")
+		}
 	}
 }
