@@ -96,11 +96,9 @@ Has reached out with the following query
 
 	emailBody, err := h.GenerateHTML(email)
 	if err != nil {
+		log.Println(emailBody)
+		log.Println(err.Error())
 		panic("Error generating html")
-	}
-	err = os.WriteFile(templatePath, []byte(emailBody), 0666)
-	if err != nil {
-		panic("Error writing HTML file to disk")
 	}
 
 	tpl, _ := template.ParseFiles(templatePath)
