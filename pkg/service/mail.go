@@ -17,7 +17,6 @@ func HandleContactUs(config schema.Config) []string {
 }
 
 func SendMail(payload schema.MailSchema) {
-	fmt.Println("Low")
 	var conf schema.Config
 	err := envconfig.Process("mailer", &conf)
 
@@ -57,5 +56,4 @@ func SendMail(payload schema.MailSchema) {
 	if err != nil {
 		return
 	}
-	fmt.Println("High")
 }
