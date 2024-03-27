@@ -11,14 +11,14 @@ We need to implement a backend server with the following APIs
 
 ## Development
 * Use following command to install all dependencies
-```golang
-go mod tidy
-```
-* Export env vars
 ```bash
-export $(cat .env | xargs)
+make install
 ```
-* Run server
-```golang
-go run ./cmd/main.go
+* Run linting
+```bash
+make format
+```
+* Run dev server
+```bash
+make run-dev
 ```
