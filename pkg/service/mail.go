@@ -120,4 +120,5 @@ Has reached out with the following query
 			log.Panicf("Got error while sending mail via SMTP")
 		}
 	}
+	os.Remove(templatePath)
 }

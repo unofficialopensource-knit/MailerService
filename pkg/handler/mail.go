@@ -16,6 +16,6 @@ func MailHandler(ctx *gin.Context) {
 		ctx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
-	go service.SendMail(payload)
-	ctx.Status(http.StatusAccepted)
+	service.SendMail(payload)
+	ctx.Status(http.StatusOK)
 }
