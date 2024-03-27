@@ -8,3 +8,17 @@
 We need to implement a backend server with the following APIs
 * `GET /health` This API will be used to find the health of our server
 * `POST /mail` This API will be responsible for sending out the actual email
+
+## Development
+* Use following command to install all dependencies
+```golang
+go mod tidy
+```
+* Export env vars
+```bash
+export $(cat .env | xargs)
+```
+* Run server
+```golang
+go run ./cmd/main.go
+```
