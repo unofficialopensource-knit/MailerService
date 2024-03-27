@@ -33,7 +33,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: 976750617193.dkr.ecr.ap-south-1.amazonaws.com/wecoach-mailer-service
           tags: type=sha
