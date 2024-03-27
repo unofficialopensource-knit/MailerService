@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"log"
 	"net/smtp"
+	"os"
 	"text/template"
 
 	"github.com/kelseyhightower/envconfig"
+	"github.com/matcornic/hermes/v2"
 	"github.com/unofficialopensource-knit/MailerService/pkg/schema"
 )
 
@@ -19,31 +21,87 @@ func SendMail(payload schema.MailRequestSchema) {
 		log.Panicf("Got error while loading config %v", err.Error())
 	}
 
-	var templatePath string
+	h := hermes.Hermes{
+		Product: hermes.Product{
+			Name: "Hermes",
+			Link: "http://wecoach.ai",
+			Logo: "http://wecoach.ai/static/images/logo.png",
+		},
+	}
 	var recipients []string
+	var templatePath string
 	var templateContext map[string]string
+	var email hermes.Email
+	var body bytes.Buffer
+	var subject string
 	switch payload.Schema.TemplateType {
 	case "FORGOT_PASSWORD":
 		panic("Service not yet implemented")
 	case "CONTACT_US":
+		subject = "New Lead"
 		recipients = []string{conf.ContactUsDefaultRecipient}
 		templateContext = map[string]string{
-			"Name":          payload.Schema.TemplateContext.Name,
-			"Email":         payload.Schema.TemplateContext.Email,
-			"ContactNumber": payload.Schema.TemplateContext.ContactNumber,
-			"UserType":      payload.Schema.TemplateContext.UserType,
-			"Message":       payload.Schema.TemplateContext.Message,
+			"Name":          payload.Schema.ContactUs.Name,
+			"Email":         payload.Schema.ContactUs.Email,
+			"ContactNumber": payload.Schema.ContactUs.ContactNumber,
+			"UserType":      payload.Schema.ContactUs.UserType,
+			"Message":       payload.Schema.ContactUs.Message,
 		}
 		templatePath = "templates/contact_us.html"
+		email = hermes.Email{
+			Body: hermes.Body{
+				FreeMarkdown: `
+A {{ .UserType }} with following details
+
+| Key            | Value                |
+| :-----------:  | :------------------: |
+| Name           | {{ .Name }}          |
+| Email          | {{ .Email }}         |
+| Contact Number | {{ .ContactNumber }} |
+
+Has reached out with the following query
+
+{{ .Message }}
+				`,
+			},
+		}
 	case "WELCOME_MAIL":
-		panic("Service not yet implemented")
+		subject = "Welocome to WeCoach"
+		recipients = []string{payload.Schema.WelcomeEmail.Recipient}
+		email = hermes.Email{
+			Body: hermes.Body{
+				Name:   payload.Schema.WelcomeEmail.Name,
+				Intros: []string{payload.Schema.WelcomeEmail.Intro},
+				Actions: []hermes.Action{
+					{
+						Instructions: payload.Schema.WelcomeEmail.Instruction,
+						Button: hermes.Button{
+							Color: payload.Schema.WelcomeEmail.BtnColor,
+							Text:  payload.Schema.WelcomeEmail.BtnText,
+							Link:  payload.Schema.WelcomeEmail.BtnLink,
+						},
+					},
+				},
+				Outros: []string{payload.Schema.WelcomeEmail.Outro},
+			},
+		}
+		templatePath = "templates/welcome.html"
+		templateContext = map[string]string{}
 	default:
 		panic("Service not yet implemented")
 	}
 
 	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
-	var body bytes.Buffer
-	body.Write([]byte(fmt.Sprintf("Subject: New Lead  \n%s\n\n", mimeHeaders)))
+	body.Write([]byte(fmt.Sprintf("Subject: %s  \n%s\n\n", subject, mimeHeaders)))
+
+	emailBody, err := h.GenerateHTML(email)
+	if err != nil {
+		panic("Error generating html")
+	}
+	err = os.WriteFile(templatePath, []byte(emailBody), 0644)
+	if err != nil {
+		panic("Error writing HTML file to disk")
+	}
 
 	tpl, _ := template.ParseFiles(templatePath)
 	tpl.Execute(&body, templateContext)

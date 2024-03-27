@@ -23,3 +23,4 @@ go.work
 .vscode/
 .env
 bin/mailer
+templates/*.html
