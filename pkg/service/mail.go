@@ -68,6 +68,8 @@ Has reached out with the following query
 	case "WELCOME_MAIL":
 		subject = "Welocome to WeCoach"
 		recipients = []string{payload.Schema.WelcomeEmail.Recipient}
+		templatePath = "templates/welcome.html"
+		templateContext = map[string]string{}
 		email = hermes.Email{
 			Body: hermes.Body{
 				Name:   payload.Schema.WelcomeEmail.Name,
@@ -85,8 +87,6 @@ Has reached out with the following query
 				Outros: []string{payload.Schema.WelcomeEmail.Outro},
 			},
 		}
-		templatePath = "templates/welcome.html"
-		templateContext = map[string]string{}
 	default:
 		panic("Service not yet implemented")
 	}
@@ -98,7 +98,7 @@ Has reached out with the following query
 	if err != nil {
 		panic("Error generating html")
 	}
-	err = os.WriteFile(templatePath, []byte(emailBody), 0644)
+	err = os.WriteFile(templatePath, []byte(emailBody), 0666)
 	if err != nil {
 		panic("Error writing HTML file to disk")
 	}
