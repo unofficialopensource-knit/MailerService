@@ -21,7 +21,7 @@ func main() {
 
 	router := factory.App(conf.Environment)
 
-	if conf.Environment == "release" {
+	if conf.Environment == "release" || conf.Environment == "debug-release" {
 		ginLambda = ginadapter.New(router)
 		lambda.Start(LambdaHandler)
 	} else {
