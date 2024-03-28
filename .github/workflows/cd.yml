@@ -28,7 +28,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: unofficialopensource-knit/MailerService
-  push:
+  Deploy:
     name: Push
     runs-on: ubuntu-latest
     needs:
@@ -65,3 +65,5 @@ jobs:
         run: docker image build --file build/Dockerfile --tag ${{ steps.meta.outputs.tags }} .
       - name: Push
         run: docker image push ${{ steps.meta.outputs.tags }}
+      - name: Redeploy Lambda
+        run: aws lambda --function-name MailerService --image-uri ${{ steps.meta.outputs.tags }}
