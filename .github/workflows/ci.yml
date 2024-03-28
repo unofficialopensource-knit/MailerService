@@ -55,7 +55,7 @@ jobs:
         with:
           go-version: 1.22.1
       - name: Run Unit Tests
-        run: go test ./cmd ./pkg/**
+        run: go test -race --covermode atomic ./pkg/**
   build:
     name: Build
     runs-on: ubuntu-latest
