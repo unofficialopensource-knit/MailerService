@@ -31,6 +31,7 @@ func TestMailHandlerEmptyBody(t *testing.T) {
 	assert.Equal(t, "", string(responseData))
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 }
+
 func TestMailHandlerInvalidBody(t *testing.T) {
 	testRouter := factory.App("test")
 	jsonPayload, err := json.Marshal(schema.MailRequestSchema{

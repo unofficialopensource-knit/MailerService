@@ -17,4 +17,4 @@ format:
 	go fmt ./cmd/ ./pkg/**
 
 tests:
-	go test ./pkg/**
+	go test -v ./pkg/**
