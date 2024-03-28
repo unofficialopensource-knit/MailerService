@@ -36,7 +36,7 @@ func SendMail(payload schema.MailRequestSchema) {
 	var subject string
 	switch payload.Schema.TemplateType {
 	case "FORGOT_PASSWORD":
-		panic("Service not yet implemented")
+		log.Panicln("FORGOT_PASSWORD service not yet supported")
 	case "CONTACT_US":
 		subject = "New Lead"
 		recipients = []string{conf.ContactUsDefaultRecipient}
@@ -47,7 +47,7 @@ func SendMail(payload schema.MailRequestSchema) {
 			"UserType":      payload.Schema.ContactUs.UserType,
 			"Message":       payload.Schema.ContactUs.Message,
 		}
-		templatePath = "templates/contact_us.html"
+		templatePath = "/tmp/contact_us.html"
 		email = hermes.Email{
 			Body: hermes.Body{
 				FreeMarkdown: `
@@ -68,7 +68,7 @@ Has reached out with the following query
 	case "WELCOME_MAIL":
 		subject = "Welocome to WeCoach"
 		recipients = []string{payload.Schema.WelcomeEmail.Recipient}
-		templatePath = "templates/welcome.html"
+		templatePath = "/tmp/welcome.html"
 		templateContext = map[string]string{}
 		email = hermes.Email{
 			Body: hermes.Body{
@@ -88,8 +88,9 @@ Has reached out with the following query
 			},
 		}
 	default:
-		panic("Service not yet implemented")
+		log.Panicln("Service not yet supported")
 	}
+	log.Println("Low")
 
 	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	body.Write([]byte(fmt.Sprintf("Subject: %s  \n%s\n\n", subject, mimeHeaders)))
@@ -98,11 +99,21 @@ Has reached out with the following query
 	if err != nil {
 		log.Println(emailBody)
 		log.Println(err.Error())
-		panic("Error generating html")
+	}
+
+	log.Println("Writing file to lambda")
+	err = os.WriteFile(templatePath, []byte(emailBody), 0666)
+	if err != nil {
+		panic("Error writing HTML file to disk")
 	}
 
 	tpl, _ := template.ParseFiles(templatePath)
-	tpl.Execute(&body, templateContext)
+	err = tpl.Execute(&body, templateContext)
+	if err != nil {
+		log.Println(err)
+		log.Println(err.Error())
+	}
+	log.Println("High")
 
 	if payload.UseServerDefaultConfig {
 		serverAuth := smtp.PlainAuth(conf.SMTPIdentity, conf.SMTPUsername, conf.SMTPPassword, conf.SMTPHost)
@@ -118,5 +129,4 @@ Has reached out with the following query
 			log.Panicf("Got error while sending mail via SMTP")
 		}
 	}
-	os.Remove(templatePath)
 }
