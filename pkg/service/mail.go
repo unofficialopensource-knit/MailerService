@@ -47,6 +47,9 @@ func SendMail(payload schema.MailRequestSchema) {
 			"UserType":      payload.Schema.ContactUs.UserType,
 			"Message":       payload.Schema.ContactUs.Message,
 		}
+		if conf.Environment == "test" {
+			templatePath = "contact_us.html"
+		}
 		templatePath = "/tmp/contact_us.html"
 		email = hermes.Email{
 			Body: hermes.Body{
@@ -90,7 +93,6 @@ Has reached out with the following query
 	default:
 		log.Panicln("Service not yet supported")
 	}
-	log.Println("Low")
 
 	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	body.Write([]byte(fmt.Sprintf("Subject: %s  \n%s\n\n", subject, mimeHeaders)))
@@ -101,7 +103,6 @@ Has reached out with the following query
 		log.Println(err.Error())
 	}
 
-	log.Println("Writing file to lambda")
 	err = os.WriteFile(templatePath, []byte(emailBody), 0666)
 	if err != nil {
 		panic("Error writing HTML file to disk")
@@ -113,7 +114,6 @@ Has reached out with the following query
 		log.Println(err)
 		log.Println(err.Error())
 	}
-	log.Println("High")
 
 	if payload.UseServerDefaultConfig {
 		serverAuth := smtp.PlainAuth(conf.SMTPIdentity, conf.SMTPUsername, conf.SMTPPassword, conf.SMTPHost)

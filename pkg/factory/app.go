@@ -3,7 +3,6 @@ package factory
 import (
 	"log"
 	"strings"
-	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -30,14 +29,12 @@ func App(mode string) *gin.Engine {
 	router.Use(cors.New(cors.Config{
 		// Harden the cors origin
 		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"PUT", "OPTIONS"},
+		AllowMethods:     []string{"POST", "OPTIONS"},
 		AllowHeaders:     []string{"Origin"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
-		MaxAge:           12 * time.Hour,
 	}))
 
 	router.POST("/mail", handler.MailHandler)
-
 	return router
 }
