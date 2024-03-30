@@ -1,27 +1,23 @@
 package main
 
 import (
-	"log"
-
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
 	"golang.org/x/net/context"
 
+	"github.com/unofficialopensource-knit/MailerService/pkg/config"
 	"github.com/unofficialopensource-knit/MailerService/pkg/factory"
 )
 
 var ginLambda *ginadapter.GinLambda
 
 func main() {
-	conf, err := factory.Config()
-	if err != nil {
-		log.Panicf("Got error while loading config %v", err.Error())
-	}
+	conf := config.Config()
 
 	router := factory.App(conf.Environment)
 
-	if conf.Environment == "release" || conf.Environment == "debug-release" {
+	if conf.Environment == "release" {
 		ginLambda = ginadapter.New(router)
 		lambda.Start(LambdaHandler)
 	} else {

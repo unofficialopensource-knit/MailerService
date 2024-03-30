@@ -1,41 +1,41 @@
 package schema
 
-type ServerConfig struct {
-	Identity string `json:"identity,omitempty"`
-	Username string `json:"username,omitempty"`
-	Password string `json:"password,omitempty"`
-	Host     string `json:"host,omitempty"`
-	Port     string `json:"port,omitempty"`
-}
-
-type ContactUsTplContext struct {
-	Name          string `json:"name,omitempty"`
-	Intro         string `json:"intro,omitempty"`
-	Email         string `json:"email,omitempty"`
-	ContactNumber string `json:"contactNumber,omitempty"`
-	UserType      string `json:"userType,omitempty"`
-	Message       string `json:"message,omitempty"`
-}
-
-type WelcomeEmailTplContext struct {
-	Name        string `json:"name,omitempty"`
-	Intro       string `json:"intro,omitempty"`
-	Instruction string `json:"instruction,omitempty"`
-	BtnColor    string `json:"btnColor,omitempty"`
-	BtnText     string `json:"btnText,omitempty"`
-	BtnLink     string `json:"btnLink,omitempty"`
-	Outro       string `json:"outro,omitempty"`
-	Recipient   string `json:"recipient,omitempty"`
+type MailRequestSchema struct {
+	UseServerDefaultConfig bool          `json:"UseServerDefaultConfig"`
+	CustomSMTPConfig       *ServerConfig `json:"CustomSMTPConfig"`
+	Schema                 *MailSchema   `json:"Schema" binding:"required"`
 }
 
 type MailSchema struct {
-	TemplateType string                  `json:"templateType" binding:"required"`
-	ContactUs    *ContactUsTplContext    `json:"contactUs"`
-	WelcomeEmail *WelcomeEmailTplContext `json:"welcomeEmail"`
+	TemplateType string                  `json:"TemplateType" binding:"required"`
+	ContactUs    *ContactUsTplContext    `json:"ContactUs"`
+	WelcomeEmail *WelcomeEmailTplContext `json:"WelcomeEmail"`
 }
 
-type MailRequestSchema struct {
-	UseServerDefaultConfig bool          `json:"useServerDefaultConfig"`
-	CustomSMTPConfig       *ServerConfig `json:"SMTPServerConfig"`
-	Schema                 *MailSchema   `json:"schema" binding:"required"`
+type ContactUsTplContext struct {
+	Name          string `json:"Name,omitempty"`
+	Intro         string `json:"Intro,omitempty"`
+	Email         string `json:"Email,omitempty"`
+	ContactNumber string `json:"ContactNumber,omitempty"`
+	UserType      string `json:"UserType,omitempty"`
+	Message       string `json:"Message,omitempty"`
+}
+
+type WelcomeEmailTplContext struct {
+	Name        string `json:"Name,omitempty"`
+	Intro       string `json:"Intro,omitempty"`
+	Instruction string `json:"Instruction,omitempty"`
+	BtnColor    string `json:"BtnColor,omitempty"`
+	BtnText     string `json:"BtnText,omitempty"`
+	BtnLink     string `json:"BtnLink,omitempty"`
+	Outro       string `json:"Outro,omitempty"`
+	Recipient   string `json:"Recipient,omitempty"`
+}
+
+type ServerConfig struct {
+	Identity string `json:"Identity,omitempty"`
+	Username string `json:"Username,omitempty"`
+	Password string `json:"Password,omitempty"`
+	Host     string `json:"Host,omitempty"`
+	Port     string `json:"Port,omitempty"`
 }

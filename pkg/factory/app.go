@@ -13,8 +13,6 @@ func App(mode string) *gin.Engine {
 	switch strings.ToUpper(strings.TrimSpace(mode)) {
 	case "DEBUG":
 		gin.SetMode(gin.DebugMode)
-	case "DEBUG-RELEASE":
-		gin.SetMode(gin.DebugMode)
 	case "TEST":
 		gin.SetMode(gin.TestMode)
 	case "RELEASE":

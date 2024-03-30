@@ -56,6 +56,19 @@ jobs:
           go-version: 1.22.1
       - name: Run Unit Tests
         run: go test -race --covermode atomic ./pkg/**
+        env:
+          MAILER_ENVIRONMENT: test
+          MAILER_SMTP_IDENTITY: ${{ secrets.MAILER_SMTP_IDENTITY }}
+          MAILER_SMTP_USERNAME: ${{ secrets.MAILER_SMTP_USERNAME }}
+          MAILER_SMTP_PASSWORD: ${{ secrets.MAILER_SMTP_PASSWORD }}
+          MAILER_SMTP_HOST: ${{ secrets.MAILER_SMTP_HOST }}
+          MAILER_SMTP_PORT: ${{ secrets.MAILER_SMTP_PORT }}
+          MAILER_CONTACT_US_DEFAULT_RECIPIENT: ${{ secrets.MAILER_CONTACT_US_DEFAULT_RECIPIENT }}
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: unofficialopensource-knit/MailerService
   build:
     name: Build
     runs-on: ubuntu-latest

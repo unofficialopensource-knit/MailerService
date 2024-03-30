@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -14,80 +13,75 @@ import (
 	"github.com/unofficialopensource-knit/MailerService/pkg/schema"
 )
 
-func TestMailHandlerEmptyBody(t *testing.T) {
+func TestMailHandlerStatusBadRequest(t *testing.T) {
 	testRouter := factory.App("test")
-	request, err := http.NewRequest("POST", "/mail", nil)
-	if err != nil {
-		log.Fatalln("Error occurred while creating a request object")
-	}
-	w := httptest.NewRecorder()
-	testRouter.ServeHTTP(w, request)
+	assert := assert.New(t)
 
-	responseData, err := io.ReadAll(w.Body)
-	if err != nil {
-		log.Println("Received following err")
-		log.Fatalln(err.Error())
-	}
-	assert.Equal(t, "", string(responseData))
-	assert.Equal(t, http.StatusBadRequest, w.Code)
-}
+	t.Run("Check that test fails for empty body", func(t *testing.T) {
+		request, err := http.NewRequest("POST", "/mail", nil)
+		assert.Empty(err)
 
-func TestMailHandlerInvalidBody(t *testing.T) {
-	testRouter := factory.App("test")
-	jsonPayload, err := json.Marshal(schema.MailRequestSchema{
-		UseServerDefaultConfig: true,
+		w := httptest.NewRecorder()
+		testRouter.ServeHTTP(w, request)
+		response, err := io.ReadAll(w.Body)
+		assert.Empty(err)
+
+		assert.Empty(string(response))
+		assert.Equal(w.Code, http.StatusBadRequest)
 	})
-	if err != nil {
-		log.Fatalln("Error occured while marshaling the test input")
-	}
-	request, err := http.NewRequest("POST", "/mail", bytes.NewBuffer(jsonPayload))
-	if err != nil {
-		log.Fatalln("Error occurred while creating a request object")
-	}
-	w := httptest.NewRecorder()
-	testRouter.ServeHTTP(w, request)
 
-	responseData, err := io.ReadAll(w.Body)
-	if err != nil {
-		log.Println("Received following err")
-		log.Fatalln(err.Error())
-	}
-	assert.Equal(t, "", string(responseData))
-	assert.Equal(t, http.StatusBadRequest, w.Code)
+	t.Run("Check that test fails for Schema not present", func(t *testing.T) {
+		jsonPayload, err := json.Marshal(schema.MailRequestSchema{
+			UseServerDefaultConfig: true,
+			CustomSMTPConfig:       nil,
+			Schema:                 nil,
+		})
+		assert.Empty(err)
+
+		request, err := http.NewRequest("POST", "/mail", bytes.NewBuffer(jsonPayload))
+		assert.Empty(err)
+
+		w := httptest.NewRecorder()
+		testRouter.ServeHTTP(w, request)
+		response, err := io.ReadAll(w.Body)
+		assert.Empty(err)
+
+		assert.Empty(string(response))
+		assert.Equal(w.Code, http.StatusBadRequest)
+	})
 }
 
-func TestMailHandlerContactUsStatusOK(t *testing.T) {
+func TestMailHandlerStatusOK(t *testing.T) {
 	testRouter := factory.App("test")
-	jsonPayload, err := json.Marshal(schema.MailRequestSchema{
-		UseServerDefaultConfig: true,
-		Schema: &schema.MailSchema{
-			TemplateType: "CONTACT_US",
-			ContactUs: &schema.ContactUsTplContext{
-				Name:          "TestUser",
-				Intro:         "TestIntro",
-				Email:         "test@example.com",
-				ContactNumber: "1234567890",
-				UserType:      "coach",
-				Message:       "TestMessage",
+	assert := assert.New(t)
+
+	t.Run("Check that test passes for contact us", func(t *testing.T) {
+		jsonPayload, err := json.Marshal(schema.MailRequestSchema{
+			UseServerDefaultConfig: true,
+			CustomSMTPConfig:       nil,
+			Schema: &schema.MailSchema{
+				TemplateType: "CONTACT_US",
+				ContactUs: &schema.ContactUsTplContext{
+					Name:          "Test",
+					Email:         "test@example.com",
+					Intro:         "TestIntro",
+					ContactNumber: "1234567890",
+					UserType:      "coach",
+					Message:       "Test",
+				},
 			},
-		},
-	})
-	if err != nil {
-		log.Fatalln("Error occured while marshaling the test input")
-	}
-	log.Println(string(jsonPayload))
-	request, err := http.NewRequest("POST", "/mail", bytes.NewBuffer(jsonPayload))
-	if err != nil {
-		log.Fatalln("Error occurred while creating a request object")
-	}
-	w := httptest.NewRecorder()
-	testRouter.ServeHTTP(w, request)
+		})
+		assert.Empty(err)
 
-	responseData, err := io.ReadAll(w.Body)
-	if err != nil {
-		log.Println("Received following error while reqding data from buffer")
-		log.Fatalln(err.Error())
-	}
-	log.Println(responseData)
-	// assert.Equal(t, http.StatusOK, w.Code)
+		request, err := http.NewRequest("POST", "/mail", bytes.NewBuffer(jsonPayload))
+		assert.Empty(err)
+
+		w := httptest.NewRecorder()
+		testRouter.ServeHTTP(w, request)
+		response, err := io.ReadAll(w.Body)
+		assert.Empty(err)
+
+		assert.Equal(w.Code, http.StatusOK)
+		assert.Empty(string(response))
+	})
 }
