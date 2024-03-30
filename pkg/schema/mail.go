@@ -1,11 +1,15 @@
 package schema
 
-type ServerConfig struct {
-	Identity string `json:"identity,omitempty"`
-	Username string `json:"username,omitempty"`
-	Password string `json:"password,omitempty"`
-	Host     string `json:"host,omitempty"`
-	Port     string `json:"port,omitempty"`
+type MailRequestSchema struct {
+	UseServerDefaultConfig bool          `json:"useServerDefaultConfig"`
+	CustomSMTPConfig       *ServerConfig `json:"SMTPServerConfig"`
+	Schema                 *MailSchema   `json:"schema" binding:"required"`
+}
+
+type MailSchema struct {
+	TemplateType string                  `json:"templateType" binding:"required"`
+	ContactUs    *ContactUsTplContext    `json:"contactUs"`
+	WelcomeEmail *WelcomeEmailTplContext `json:"welcomeEmail"`
 }
 
 type ContactUsTplContext struct {
@@ -28,14 +32,10 @@ type WelcomeEmailTplContext struct {
 	Recipient   string `json:"recipient,omitempty"`
 }
 
-type MailSchema struct {
-	TemplateType string                  `json:"templateType" binding:"required"`
-	ContactUs    *ContactUsTplContext    `json:"contactUs"`
-	WelcomeEmail *WelcomeEmailTplContext `json:"welcomeEmail"`
-}
-
-type MailRequestSchema struct {
-	UseServerDefaultConfig bool          `json:"useServerDefaultConfig"`
-	CustomSMTPConfig       *ServerConfig `json:"SMTPServerConfig"`
-	Schema                 *MailSchema   `json:"schema" binding:"required"`
+type ServerConfig struct {
+	Identity string `json:"identity,omitempty"`
+	Username string `json:"username,omitempty"`
+	Password string `json:"password,omitempty"`
+	Host     string `json:"host,omitempty"`
+	Port     string `json:"port,omitempty"`
 }
