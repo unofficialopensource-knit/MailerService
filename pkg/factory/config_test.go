@@ -10,7 +10,8 @@ import (
 
 func TestConfigPasses(t *testing.T) {
 	os.Setenv("MAILER_ENVIRONMENT", "test")
-	conf := factory.Config()
-
-	assert.Equal(t, conf.Environment, "test")
+	t.Run("Check if config is set from env vars", func(t *testing.T) {
+		conf := factory.Config()
+		assert.Equal(t, conf.Environment, "test")
+	})
 }
