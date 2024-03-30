@@ -1,7 +1,6 @@
 package factory_test
 
 import (
-	"fmt"
 	"os"
 	"testing"
 
@@ -11,9 +10,7 @@ import (
 
 func TestConfigPasses(t *testing.T) {
 	os.Setenv("MAILER_ENVIRONMENT", "test")
-	conf, err := factory.Config()
-	fmt.Println(conf)
+	conf := factory.Config()
 
-	assert.Empty(t, err)
 	assert.Equal(t, conf.Environment, "test")
 }

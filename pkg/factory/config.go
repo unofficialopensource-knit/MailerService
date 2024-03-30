@@ -5,8 +5,8 @@ import (
 	"github.com/unofficialopensource-knit/MailerService/pkg/schema"
 )
 
-func Config() (schema.Config, error) {
+func Config() schema.Config {
 	var conf schema.Config
-	err := envconfig.Process("mailer", &conf)
-	return conf, err
+	envconfig.MustProcess("MAILER", &conf)
+	return conf
 }
