@@ -8,19 +8,13 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/kelseyhightower/envconfig"
 	"github.com/matcornic/hermes/v2"
+	"github.com/unofficialopensource-knit/MailerService/pkg/config"
 	"github.com/unofficialopensource-knit/MailerService/pkg/schema"
 )
 
 func SendMail(payload schema.MailRequestSchema) {
-	var conf schema.Config
-	err := envconfig.Process("mailer", &conf)
-
-	if err != nil {
-		log.Panicf("Got error while loading config %v", err.Error())
-	}
-
+	conf := config.Config()
 	h := hermes.Hermes{
 		Product: hermes.Product{
 			Name: "Hermes",
@@ -34,6 +28,12 @@ func SendMail(payload schema.MailRequestSchema) {
 	var email hermes.Email
 	var body bytes.Buffer
 	var subject string
+
+	if conf.Environment == "test" {
+		templatePath = "/tmp/"
+	} else {
+		templatePath = "./"
+	}
 	switch payload.Schema.TemplateType {
 	case "FORGOT_PASSWORD":
 		log.Panicln("FORGOT_PASSWORD service not yet supported")
@@ -50,7 +50,7 @@ func SendMail(payload schema.MailRequestSchema) {
 		if conf.Environment == "test" {
 			templatePath = "contact_us.html"
 		}
-		templatePath = "/tmp/contact_us.html"
+		templatePath = templatePath + "contact_us.html"
 		email = hermes.Email{
 			Body: hermes.Body{
 				FreeMarkdown: `
@@ -71,7 +71,7 @@ Has reached out with the following query
 	case "WELCOME_MAIL":
 		subject = "Welocome to WeCoach"
 		recipients = []string{payload.Schema.WelcomeEmail.Recipient}
-		templatePath = "/tmp/welcome.html"
+		templatePath = templatePath + "welcome.html"
 		templateContext = map[string]string{}
 		email = hermes.Email{
 			Body: hermes.Body{
@@ -129,4 +129,5 @@ Has reached out with the following query
 			log.Panicf("Got error while sending mail via SMTP")
 		}
 	}
+	os.Remove(templatePath)
 }

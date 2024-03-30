@@ -17,4 +17,4 @@ format:
 	go fmt ./cmd/ ./pkg/**
 
 tests:
-	go test -v ./pkg/**
+	go test -v --covermode atomic ./pkg/**

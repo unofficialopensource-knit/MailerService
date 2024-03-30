@@ -6,17 +6,18 @@ import (
 	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
 	"golang.org/x/net/context"
 
+	"github.com/unofficialopensource-knit/MailerService/pkg/config"
 	"github.com/unofficialopensource-knit/MailerService/pkg/factory"
 )
 
 var ginLambda *ginadapter.GinLambda
 
 func main() {
-	conf := factory.Config()
+	conf := config.Config()
 
 	router := factory.App(conf.Environment)
 
-	if conf.Environment == "release" || conf.Environment == "debug-release" {
+	if conf.Environment == "release" {
 		ginLambda = ginadapter.New(router)
 		lambda.Start(LambdaHandler)
 	} else {
