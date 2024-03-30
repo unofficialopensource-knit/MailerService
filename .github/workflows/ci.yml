@@ -56,6 +56,11 @@ jobs:
           go-version: 1.22.1
       - name: Run Unit Tests
         run: go test -race --covermode atomic ./pkg/**
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: unofficialopensource-knit/MailerService
   build:
     name: Build
     runs-on: ubuntu-latest
