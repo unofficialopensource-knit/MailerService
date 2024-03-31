@@ -1,5 +1,7 @@
 package schema
 
+import "context"
+
 type MailRequestSchema struct {
 	UseServerDefaultConfig bool          `json:"UseServerDefaultConfig"`
 	CustomSMTPConfig       *ServerConfig `json:"CustomSMTPConfig"`
@@ -38,4 +40,8 @@ type ServerConfig struct {
 	Password string `json:"Password,omitempty"`
 	Host     string `json:"Host,omitempty"`
 	Port     string `json:"Port,omitempty"`
+}
+
+type MailService interface {
+	Send(context.Context, MailRequestSchema) error
 }
