@@ -55,7 +55,7 @@ jobs:
         with:
           go-version: 1.22.1
       - name: Run Unit Tests
-        run: go test -race --covermode atomic ./pkg/**
+        run: go test -race -v --covermode atomic ./pkg/**
         env:
           MAILER_ENVIRONMENT: test
           MAILER_SMTP_IDENTITY: ${{ secrets.MAILER_SMTP_IDENTITY }}
