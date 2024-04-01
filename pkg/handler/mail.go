@@ -16,6 +16,14 @@ func MailHandler(ctx *gin.Context) {
 		ctx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
-	service.SendMail(payload)
+
+	// Implement a interface for all kinds of template type
+	err = service.SendMail(payload)
+	if err != nil {
+		ctx.Error(err)
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
 	ctx.Status(http.StatusOK)
 }

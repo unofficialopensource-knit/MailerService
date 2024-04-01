@@ -14,7 +14,11 @@ run-dev:
 	go run cmd/main.go
 
 format:
-	go fmt ./cmd/ ./pkg/**
+	go fmt -n ./cmd/**.go
+	go fmt -n ./pkg/config/**.go
+	go fmt -n ./pkg/handler/**.go
+	go fmt -n ./pkg/schema/**.go
+	go fmt -n ./pkg/service/**.go
 
 tests:
 	go test -v --covermode atomic ./pkg/**

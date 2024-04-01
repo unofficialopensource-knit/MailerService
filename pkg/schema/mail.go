@@ -1,6 +1,10 @@
 package schema
 
-import "context"
+import (
+	"bytes"
+
+	"github.com/matcornic/hermes/v2"
+)
 
 type MailRequestSchema struct {
 	UseServerDefaultConfig bool          `json:"UseServerDefaultConfig"`
@@ -42,6 +46,11 @@ type ServerConfig struct {
 	Port     string `json:"Port,omitempty"`
 }
 
-type MailService interface {
-	Send(context.Context, MailRequestSchema) error
+type ServiceMessage struct {
+	Recipients      []string
+	TemplatePath    string
+	TemplateContext map[string]string
+	Email           hermes.Email
+	Body            bytes.Buffer
+	Subject         string
 }
