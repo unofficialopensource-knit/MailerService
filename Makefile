@@ -21,4 +21,6 @@ format:
 	go fmt -n ./pkg/service/**.go
 
 tests:
-	go test -v --covermode atomic ./pkg/**
+	go test -v --covermode atomic ./pkg/config/**
+	go test -v --covermode atomic ./pkg/handler/**
+	go test -v --covermode atomic ./pkg/service/**
