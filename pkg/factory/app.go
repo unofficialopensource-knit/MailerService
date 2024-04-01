@@ -1,7 +1,7 @@
 package factory
 
 import (
-	"log"
+	"log/slog"
 	"strings"
 
 	"github.com/gin-contrib/cors"
@@ -18,7 +18,7 @@ func App(mode string) *gin.Engine {
 	case "RELEASE":
 		gin.SetMode(gin.ReleaseMode)
 	default:
-		log.Panicln("Mode not supported for running the server")
+		slog.Error("Mode is not supported", "mode", mode)
 	}
 	gin.DisableConsoleColor()
 
