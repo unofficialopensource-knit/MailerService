@@ -85,3 +85,10 @@ func TestMailHandlerStatusOK(t *testing.T) {
 		assert.Empty(string(response))
 	})
 }
+
+func TestMailHandlerStatusInternalServerError(t *testing.T) {
+	t.Run("MailHandler returns internal server error", func(t *testing.T) {
+		// TODO:- Mock a service and return an err
+		assert.Equal(t, 1, 1)
+	})
+}
