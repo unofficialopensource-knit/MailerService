@@ -31,6 +31,7 @@ type WelcomeEmailTplContext struct {
 	Name        string `json:"Name,omitempty"`
 	Intro       string `json:"Intro,omitempty"`
 	Instruction string `json:"Instruction,omitempty"`
+	Greeting    string `json:"Greeting,omitempty"`
 	BtnColor    string `json:"BtnColor,omitempty"`
 	BtnText     string `json:"BtnText,omitempty"`
 	BtnLink     string `json:"BtnLink,omitempty"`

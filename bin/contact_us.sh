@@ -3,15 +3,15 @@
 curl --location --request POST 'http://localhost:8080/mail' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-  "useServerDefaultConfig": true,
-  "schema": {
-    "templateType": "CONTACT_US",
-    "contactUs": {
-      "name": "Test",
-      "email": "test@example.com",
-      "contactNumber": "1234567890",
-      "userType": "coach",
-      "message": "Hello, World!!"
+  "UseServerDefaultConfig": true,
+  "Schema": {
+    "TemplateType": "CONTACT_US",
+    "ContactUs": {
+      "Name": "Test",
+      "Email": "test@example.com",
+      "ContactNumber": "1234567890",
+      "UserType": "coach",
+      "Message": "Hello, World!!"
     }
   }
 }'
@@ -19,18 +19,19 @@ curl --location --request POST 'http://localhost:8080/mail' \
 curl --location --request POST 'http://localhost:8080/mail' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-  "useServerDefaultConfig": true,
-  "schema": {
-    "templateType": "WELCOME_MAIL",
-    "welcomeEmail": {
-      "name": "Mayank",
-      "intro": "Welcome to WeCoach! We are very excited to have you on board.",
-      "instruction": "To get started with WeCoach, please click here:",
-      "btnColor": "#22BC66",
-      "btnText": "Confirm your account",
-      "btnLink": "http://wecoach.ai/login",
-      "recipient": "onlinejudge95@gmail.com",
-      "outro": "Need help, or have questions? Just reply to this email, we would love to help."
+  "UseServerDefaultConfig": true,
+  "Schema": {
+    "TemplateType": "WELCOME_MAIL",
+    "WelcomeEmail": {
+      "Name": "Mayank",
+      "Intro": "Welcome to WeCoach! We are very excited to have you on board.",
+      "Greeting": "Dear",
+      "Instruction": "To get started with WeCoach, please click here:",
+      "BtnColor": "#22BC66",
+      "BtnText": "Confirm your account",
+      "BtnLink": "http://wecoach.ai/login",
+      "Recipient": "onlinejudge95@gmail.com",
+      "Outro": "Need help, or have questions? Just reply to this email, we would love to help."
     }
   }
 }'
@@ -38,22 +39,22 @@ curl --location --request POST 'http://localhost:8080/mail' \
 curl --location --request POST 'http://localhost:8080/mail' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-  "useServerDefaultConfig": false,
-  "SMTPServerConfig": {
-    "identity": "",
-    "username": "",
-    "password": "",
-    "host": "",
-    "port": ""
+  "UseServerDefaultConfig": false,
+  "CustomSMTPConfig": {
+    "Identity": "",
+    "Username": "",
+    "Password": "",
+    "Host": "",
+    "Port": ""
   },
-  "schema": {
-    "templateType": "CONTACT_US",
-    "templateContext": {
-      "name": "Test",
-      "email": "test@example.com",
-      "contactNumber": "1234567890",
-      "userType": "coach",
-      "message": "Hello, World!!"
+  "Schema": {
+    "TemplateType": "CONTACT_US",
+    "ContactUs": {
+      "Name": "Test",
+      "Email": "test@example.com",
+      "ContactNumber": "1234567890",
+      "UserType": "coach",
+      "Message": "Hello, World!!"
     }
   }
 }'
