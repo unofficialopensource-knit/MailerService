@@ -3,7 +3,7 @@ package service
 import (
 	"bytes"
 	"fmt"
-	"log"
+	"log/slog"
 	"net/smtp"
 	"os"
 	"text/template"
@@ -67,12 +67,10 @@ func (cs ContactUsService) SendHTMLEmail(flag bool, conf config.Settings, msg sc
 }
 
 func GetBaseTemplatePath(mode string) string {
-	if mode == "test" {
-		return "./"
-	} else if mode == "debug" {
-		return "./template"
+	if mode == "release" {
+		return "/tmp/"
 	} else {
-		return "/tmp"
+		return "./"
 	}
 }
 
@@ -91,8 +89,6 @@ func SendMail(payload schema.MailRequestSchema) error {
 
 	// TODO:- Add individual services
 	switch payload.Schema.TemplateType {
-	case "FORGOT_PASSWORD":
-		log.Panicln("FORGOT_PASSWORD service not yet supported")
 	case "CONTACT_US":
 		svc = ContactUsService{
 			msg: &schema.ServiceMessage{
@@ -150,7 +146,7 @@ func SendMail(payload schema.MailRequestSchema) error {
 		// 	Subject: "Welocome to WeCoach",
 		// }
 	default:
-		log.Panicln("Service not yet supported")
+		slog.Error("Service is not yet supported", "service", payload.Schema.TemplateType)
 	}
 
 	err := svc.GenerateHTMLBody(h)
