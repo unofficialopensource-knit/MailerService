@@ -9,6 +9,7 @@ import (
 )
 
 var appLocalConfig HTTPConfig
+var service Service
 
 func AppFactory(mode string) *fiber.App {
 	appLocalConfig, _ = LoadConfig(context.Background())
@@ -19,6 +20,7 @@ func AppFactory(mode string) *fiber.App {
 		ServerHeader:  "Fiber/Go",
 		StrictRouting: true,
 	}
+	service = *NewService(appLocalConfig)
 
 	app := fiber.New(fiberConfig)
 	app.Use(cors.New())

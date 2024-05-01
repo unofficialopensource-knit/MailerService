@@ -9,12 +9,12 @@ import (
 	"text/template"
 
 	"github.com/matcornic/hermes/v2"
-	"github.com/unofficialopensource-knit/MailerService/pkg/config"
-	"github.com/unofficialopensource-knit/MailerService/pkg/schema"
+	// "github.com/unofficialopensource-knit/MailerService/pkg/config"
+	// "github.com/unofficialopensource-knit/MailerService/pkg/schema"
 )
 
 func SendMail(payload schema.MailRequestSchema) {
-	conf := config.Config()
+	// conf := config.Config()
 	h := hermes.Hermes{
 		Product: hermes.Product{
 			Name: "Hermes",

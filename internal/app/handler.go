@@ -16,5 +16,10 @@ func ContactUsHandler(c *fiber.Ctx) error {
 		slog.Error(err.Error())
 		return fiber.NewError(fiber.StatusUnprocessableEntity)
 	}
+	err = service.SendContactUsMail(payload)
+	if err != nil {
+		slog.Error(err.Error())
+		return fiber.NewError(fiber.StatusBadRequest)
+	}
+	return c.SendStatus(fiber.StatusAccepted)
 }
-

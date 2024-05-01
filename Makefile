@@ -11,7 +11,7 @@ run-dev:
 	dotenv --dotenv dev.env go run cmd/main.go
 
 format:
-	go fmt ./cmd/ ./pkg/**
+	go fmt ./...
 
 tests:
 	dotenv --dotenv test.env go test -v --covermode atomic ./pkg/**
