@@ -32,7 +32,7 @@ jobs:
           MAILER_SMTP_PORT: ${{ vars.MAILER_SMTP_PORT }}
           MAILER_CONTACT_US_DEFAULT_RECIPIENT: ${{ vars.MAILER_CONTACT_US_DEFAULT_RECIPIENT }}
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4.0.1
+        uses: codecov/codecov-action@v4.3.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: unofficialopensource-knit/MailerService
