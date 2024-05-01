@@ -1,30 +1,30 @@
 package main
 
 import (
+	"context"
+	"log/slog"
+
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
-	"golang.org/x/net/context"
+	fiberadapter "github.com/awslabs/aws-lambda-go-api-proxy/fiber"
 
-	"github.com/unofficialopensource-knit/MailerService/pkg/config"
-	"github.com/unofficialopensource-knit/MailerService/pkg/factory"
+	"github.com/unofficialopensource-knit/MailerService/internal/app"
 )
 
-var ginLambda *ginadapter.GinLambda
-
 func main() {
-	conf := config.Config()
-
-	router := factory.App(conf.Environment)
-
-	if conf.Environment == "release" {
-		ginLambda = ginadapter.New(router)
-		lambda.Start(LambdaHandler)
-	} else {
-		router.Run(conf.BindAddress)
+	appConfig, err := app.LoadConfig(context.Background())
+	if err != nil {
+		slog.Error(err.Error())
 	}
-}
 
-func LambdaHandler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	return ginLambda.ProxyWithContext(ctx, request)
+	server := app.AppFactory(appConfig.Environment)
+
+	if appConfig.LambdaTaskRoot != "" {
+		fiberLambda := fiberadapter.New(server)
+		lambda.Start(func(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+			return fiberLambda.ProxyWithContext(ctx, req)
+		})
+	} else {
+		server.Listen(appConfig.BindAddress)
+	}
 }
