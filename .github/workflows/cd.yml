@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: go mod tidy
       - name: Run Unit Tests
-        run: go test -race -coverprofile coverage.out --covermode atomic ./pkg/**
+        run: go test -v --race --covermode atomic --coverpkg github.com/unofficialopensource-knit/MailerService/internal/app ./internal/app_test/unit/
         env:
           ENVIRONMENT: test
           SMTP_IDENTITY: ${{ secrets.MAILER_SMTP_IDENTITY }}
