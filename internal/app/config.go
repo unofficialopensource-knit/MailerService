@@ -8,17 +8,16 @@ import (
 
 type HTTPConfig struct {
 	LambdaTaskRoot            string `envconfig:"LAMBDA_TASK_ROOT"`
-	Environment               string `encvonfig:"ENVIRONMENT"`
 	BindAddress               string `envconfig:"BIND_ADDR"`
-	SMTPIdentity              string `envconfig:"SMTP_IDENTITY"`
-	SMTPUsername              string `envconfig:"SMTP_USERNAME"`
-	SMTPPassword              string `envconfig:"SMTP_PASSWORD"`
-	SMTPHost                  string `envconfig:"SMTP_HOST"`
-	SMTPPort                  string `envconfig:"SMTP_PORT"`
-	ContactUsDefaultRecipient string `envconfig:"CONTACT_US_DEFAULT_RECIPIENT"`
+	SMTPIdentity              string `envconfig:"SMTP_IDENTITY, required"`
+	SMTPUsername              string `envconfig:"SMTP_USERNAME, required"`
+	SMTPPassword              string `envconfig:"SMTP_PASSWORD, required"`
+	SMTPHost                  string `envconfig:"SMTP_HOST, required"`
+	SMTPPort                  string `envconfig:"SMTP_PORT, required"`
+	ContactUsDefaultRecipient string `envconfig:"CONTACT_US_DEFAULT_RECIPIENT, required"`
 }
 
-func LoadConfig(c context.Context) (HTTPConfig, error) {
+func NewHTTPConfig(c context.Context) (HTTPConfig, error) {
 	var conf HTTPConfig
 	err := envconfig.Process(c, &conf)
 	return conf, err

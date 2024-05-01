@@ -11,8 +11,8 @@ import (
 var appLocalConfig HTTPConfig
 var service Service
 
-func AppFactory(mode string) *fiber.App {
-	appLocalConfig, _ = LoadConfig(context.Background())
+func AppFactory() *fiber.App {
+	appLocalConfig, _ = NewHTTPConfig(context.Background())
 	fiberConfig := fiber.Config{
 		AppName:       "UploadService",
 		BodyLimit:     20 * 1024 * 1024,

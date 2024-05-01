@@ -12,12 +12,12 @@ import (
 )
 
 func main() {
-	appConfig, err := app.LoadConfig(context.Background())
+	appConfig, err := app.NewHTTPConfig(context.Background())
 	if err != nil {
 		slog.Error(err.Error())
 	}
 
-	server := app.AppFactory(appConfig.Environment)
+	server := app.AppFactory()
 
 	if appConfig.LambdaTaskRoot != "" {
 		fiberLambda := fiberadapter.New(server)
