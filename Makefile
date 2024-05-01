@@ -1,6 +1,3 @@
-include .envs/.local
-export
-
 install:
 	go mod tidy
 

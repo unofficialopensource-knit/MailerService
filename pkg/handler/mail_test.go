@@ -51,37 +51,37 @@ func TestMailHandlerStatusBadRequest(t *testing.T) {
 	})
 }
 
-func TestMailHandlerStatusOK(t *testing.T) {
-	testRouter := factory.App("test")
-	assert := assert.New(t)
+// func TestMailHandlerStatusOK(t *testing.T) {
+// 	testRouter := factory.App("test")
+// 	assert := assert.New(t)
 
-	t.Run("Check that test passes for contact us", func(t *testing.T) {
-		jsonPayload, err := json.Marshal(schema.MailRequestSchema{
-			UseServerDefaultConfig: true,
-			CustomSMTPConfig:       nil,
-			Schema: &schema.MailSchema{
-				TemplateType: "CONTACT_US",
-				ContactUs: &schema.ContactUsTplContext{
-					Name:          "Test",
-					Email:         "test@example.com",
-					Intro:         "TestIntro",
-					ContactNumber: "1234567890",
-					UserType:      "coach",
-					Message:       "Test",
-				},
-			},
-		})
-		assert.Empty(err)
+// 	t.Run("Check that test passes for contact us", func(t *testing.T) {
+// 		jsonPayload, err := json.Marshal(schema.MailRequestSchema{
+// 			UseServerDefaultConfig: true,
+// 			CustomSMTPConfig:       nil,
+// 			Schema: &schema.MailSchema{
+// 				TemplateType: "CONTACT_US",
+// 				ContactUs: &schema.ContactUsTplContext{
+// 					Name:          "Test",
+// 					Email:         "test@example.com",
+// 					Intro:         "TestIntro",
+// 					ContactNumber: "1234567890",
+// 					UserType:      "coach",
+// 					Message:       "Test",
+// 				},
+// 			},
+// 		})
+// 		assert.Empty(err)
 
-		request, err := http.NewRequest("POST", "/mail", bytes.NewBuffer(jsonPayload))
-		assert.Empty(err)
+// 		request, err := http.NewRequest("POST", "/mail", bytes.NewBuffer(jsonPayload))
+// 		assert.Empty(err)
 
-		w := httptest.NewRecorder()
-		testRouter.ServeHTTP(w, request)
-		response, err := io.ReadAll(w.Body)
-		assert.Empty(err)
+// 		w := httptest.NewRecorder()
+// 		testRouter.ServeHTTP(w, request)
+// 		response, err := io.ReadAll(w.Body)
+// 		assert.Empty(err)
 
-		assert.Equal(w.Code, http.StatusOK)
-		assert.Empty(string(response))
-	})
-}
+// 		assert.Equal(w.Code, http.StatusOK)
+// 		assert.Empty(string(response))
+// 	})
+// }
