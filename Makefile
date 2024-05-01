@@ -11,10 +11,10 @@ clean:
 	rm bin/mailer
 
 run-dev:
-	go run cmd/main.go
+	dotenv --dotenv dev.env go run cmd/main.go
 
 format:
 	go fmt ./cmd/ ./pkg/**
 
 tests:
-	go test -v --covermode atomic ./pkg/**
+	dotenv --dotenv test.env go test -v --covermode atomic ./pkg/**
