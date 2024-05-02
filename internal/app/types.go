@@ -11,4 +11,5 @@ type ContactUsInput struct {
 type WelcomeInput struct {
 	Name     string
 	UserType string
+	Email    string
 }
