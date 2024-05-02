@@ -33,7 +33,7 @@ func (s *Service) SendContactUsMail(payload ContactUsInputSchema) error {
 			Logo: "http://wecoach.ai/static/images/logo.png",
 		},
 	}
-	templatePath := "./contact-us.html"
+	templatePath := "/tmp/contact-us.html"
 	templateContext := map[string]string{
 		"Name":          payload.Name,
 		"Email":         payload.Email,
@@ -41,7 +41,6 @@ func (s *Service) SendContactUsMail(payload ContactUsInputSchema) error {
 		"UserType":      payload.UserType,
 		"Message":       payload.Message,
 	}
-	// recipients := s.Recipient
 	email := hermes.Email{
 		Body: hermes.Body{
 			FreeMarkdown: `
