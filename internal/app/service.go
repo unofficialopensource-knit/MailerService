@@ -155,7 +155,7 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 	}
 	serverAuth := smtp.PlainAuth(s.Config.SMTPIdentity, s.Config.SMTPUsername, s.Config.SMTPPassword, s.Config.SMTPHost)
 
-	err = smtp.SendMail(s.Config.SMTPHost+":"+s.Config.SMTPPort, serverAuth, s.Config.SMTPUsername, []string{s.Config.ContactUsDefaultRecipient}, body.Bytes())
+	err = smtp.SendMail(s.Config.SMTPHost+":"+s.Config.SMTPPort, serverAuth, payload.Email, []string{s.Config.ContactUsDefaultRecipient}, body.Bytes())
 	if err != nil {
 		slog.Error(err.Error())
 		return err
