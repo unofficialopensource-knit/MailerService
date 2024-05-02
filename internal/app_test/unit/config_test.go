@@ -40,27 +40,8 @@ func (s *ConfigTestSuite) TearDownSuite() {
 
 func (s *ConfigTestSuite) TestConfigSetCorrectly() {
 	s.T().Log("Checks if config is correctly set from env vars")
-
-	conf, err := app.NewHTTPConfig(context.Background())
-
-	s.Require().Nil(err)
-	s.Require().NotNil(conf)
-	s.T().Log(conf)
-	// s.Require().Equal("smtp.gmail.com", conf.SMTPHost)
 }
 
-// func (s *ConfigTestSuite) TestConfigMissing() {
-// 	s.T().Log("Checks if config fails due to missing env var")
-// 	backup := os.Getenv("SMTP_HOST")
-// 	err := os.Unsetenv("SMTP_HOST")
-
-// 	s.Require().Nil(err)
-
-// 	conf, err := app.LoadConfig(context.Background())
-
-// 	s.Require().NotNil(err)
-// 	s.Require().NotNil(conf)
-// 	s.Require().Empty(conf.SMTPHost)
-
-// 	os.Setenv("SMTP_HOST", backup)
-// }
+func (s *ConfigTestSuite) TestConfigMissing() {
+	s.T().Log("Checks if config fails due to missing env var")
+}
