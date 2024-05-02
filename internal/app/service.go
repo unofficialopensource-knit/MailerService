@@ -22,6 +22,12 @@ func NewService(conf HTTPConfig) *Service {
 }
 
 func (s *Service) SendContactUsMail(payload ContactUsInput) error {
+	signature := `
+	Best regards,
+	Akash Tyagi
+    Founder & CEO
+    WeCoach.AI
+	`
 	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	body := bytes.NewBuffer(nil)
 
@@ -55,6 +61,7 @@ Has reached out with the following query
 
 {{ .Message }}
 				`,
+			Signature: signature,
 		},
 	}
 
@@ -90,6 +97,12 @@ Has reached out with the following query
 
 func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 	var intro []string
+	signature := `
+	Best regards,
+	Akash Tyagi
+    Founder & CEO
+    WeCoach.AI
+	`
 	if payload.UserType == "student" {
 		intro = []string{
 			"Welcome to WeCoach.AI. We're thrilled to have you on board and excited to embark on this journey toward achieving your fitness goals together. Here's a brief overview to help you navigate through your dashboard.",
@@ -130,6 +143,7 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 				"We're committed to helping you unlock your full potential and achieve your fitness goals. If you have any questions or need assistance, don't hesitate to reach out to our support team at wecoach.ai@gmail.com or contact +91-9953836512",
 				"Once again, welcome to WeCoach.AI! Get ready to transform your fitness and unleash your best self.",
 			},
+			Signature: signature,
 		},
 	}
 
