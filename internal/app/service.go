@@ -89,7 +89,6 @@ Has reached out with the following query
 }
 
 func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
-	subject := "Welcome to WeCoach.AI -Train Smarter not Harder"
 	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 
 	h := hermes.Hermes{
@@ -105,8 +104,16 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 	}
 	email := hermes.Email{
 		Body: hermes.Body{
-			Name:   "{{ .Name }}",
-			Intros: []string{},
+			Name: "{{ .Name }}",
+			Intros: []string{
+				"Welcome to WeCoach.AI. We're thrilled to have you on board and excited to embark on this journey toward achieving your fitness goals together. Here's a brief overview to help you navigate through your dashboard.",
+				"1. **Dashboard Navigation**: Your dashboard is your central hub for accessing all our services and tracking your progress. You'll find tabs for your Profile Information, Update Profile and AI tracker making it easy to stay organized and focused on your goals.",
+				"2. **AI-Powered Fitness Test**: One of the unique features of our platform is our AI-powered fitness test FlexScore-AI. Our AI Fitness Test analyses various aspects of fitness, including strength, endurance and stamina by using body weight exercises as a metrics.",
+				"3. **Customized Workouts and Nutrition Plans**: Say goodbye to generic fitness plans! Our platform offers personalized workout routines and nutrition plans tailored to your specific needs and goals based on your fitness test result. Whether you're looking to build strength, improve endurance, or lose weight, we've got you covered.",
+				"4. We Wellness : Counseling Services for Holistic Well-being. At WeCoach.AI, we understand that success goes beyond physical performance. We are thrilled to introduce 'We Wellness', our counseling service designed to support the mental health and overall well-being of students and their parents. Our expert team of counsellors will help you stay motivated and tackle your day to day problems seamlessly.",
+				"5. FAI Score: The FAI Score is an indication of your overall fitness level and is bound to improve once you regularly follow the workout regime and nutrition plans with WeCoach.AI",
+				"To access your current fitness regime download the AI-powered report card after your fitness test on a monthly basis.",
+			},
 			Outros: []string{
 				"We're committed to helping you unlock your full potential and achieve your fitness goals. If you have any questions or need assistance, don't hesitate to reach out to our support team at wecoach.ai@gmail.com or contact +91-9953836512",
 				"Once again, welcome to WeCoach.AI! Get ready to transform your fitness and unleash your best self.",
@@ -114,7 +121,7 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 		},
 	}
 
-	s.Body.Write([]byte(fmt.Sprintf("Subject: %s  \n%s\n\n", subject, mimeHeaders)))
+	s.Body.Write([]byte(fmt.Sprintf("Subject: %s  \n%s\n\n", "Welcome to WeCoach.AI -Train Smarter not Harder", mimeHeaders)))
 
 	emailBody, err := h.GenerateHTML(email)
 	if err != nil {
