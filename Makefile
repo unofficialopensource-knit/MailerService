@@ -11,7 +11,10 @@ run-dev:
 	dotenv --dotenv dev.env go run cmd/main.go
 
 format:
-	go fmt ./cmd/ ./pkg/**
+	go fmt ./...
 
-tests:
-	dotenv --dotenv test.env go test -v --covermode atomic ./pkg/**
+test-unit:
+	dotenv --dotenv test.env go test -v --covermode atomic --coverpkg github.com/unofficialopensource-knit/MailerService/internal/app ./internal/app_test/unit/
+
+test-integration:
+	dotenv --dotenv test.env go test -v --covermode atomic --coverpkg github.com/unofficialopensource-knit/MailerService/internal/app/ ./internal/app_test/integration/
