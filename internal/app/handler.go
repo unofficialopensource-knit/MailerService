@@ -9,7 +9,7 @@ import (
 func ContactUsHandler(c *fiber.Ctx) error {
 	c.Accepts("application/json")
 
-	var payload ContactUsInputSchema
+	var payload ContactUsInput
 
 	err := c.BodyParser(&payload)
 	if err != nil {
@@ -17,6 +17,24 @@ func ContactUsHandler(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusUnprocessableEntity)
 	}
 	err = service.SendContactUsMail(payload)
+	if err != nil {
+		slog.Error(err.Error())
+		return fiber.NewError(fiber.StatusBadRequest)
+	}
+	return c.SendStatus(fiber.StatusAccepted)
+}
+
+func WelcomeHandler(c *fiber.Ctx) error {
+	c.Accepts("application/json")
+
+	var payload WelcomeInput
+
+	err := c.BodyParser(&payload)
+	if err != nil {
+		slog.Error(err.Error())
+		return fiber.NewError(fiber.StatusUnprocessableEntity)
+	}
+	err = service.SendWelcomeMail(payload)
 	if err != nil {
 		slog.Error(err.Error())
 		return fiber.NewError(fiber.StatusBadRequest)

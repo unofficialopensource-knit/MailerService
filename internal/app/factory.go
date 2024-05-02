@@ -28,6 +28,7 @@ func AppFactory() *fiber.App {
 	app.Use(logger.New())
 
 	app.Post("/mail/contact-us", ContactUsHandler)
+	app.Post("/mail/welcome", WelcomeHandler)
 
 	return app
 }
