@@ -14,7 +14,7 @@ var service Service
 func AppFactory() *fiber.App {
 	appLocalConfig, _ = NewHTTPConfig(context.Background())
 	fiberConfig := fiber.Config{
-		AppName:       "UploadService",
+		AppName:       "MailerService",
 		BodyLimit:     20 * 1024 * 1024,
 		CaseSensitive: true,
 		ServerHeader:  "Fiber/Go",
