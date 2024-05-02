@@ -13,7 +13,6 @@ import (
 
 type Service struct {
 	Config HTTPConfig
-	Body   bytes.Buffer
 }
 
 func NewService(conf HTTPConfig) *Service {
@@ -24,6 +23,7 @@ func NewService(conf HTTPConfig) *Service {
 
 func (s *Service) SendContactUsMail(payload ContactUsInput) error {
 	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+	body := bytes.NewBuffer(nil)
 
 	h := hermes.Hermes{
 		Product: hermes.Product{
@@ -58,7 +58,7 @@ Has reached out with the following query
 		},
 	}
 
-	s.Body.Write([]byte(fmt.Sprintf("Subject: %s  \n%s\n\n", "New Lead", mimeHeaders)))
+	body.Write([]byte(fmt.Sprintf("Subject: %s  \n%s\n\n", "New Lead", mimeHeaders)))
 
 	emailBody, err := h.GenerateHTML(email)
 	if err != nil {
@@ -73,14 +73,14 @@ Has reached out with the following query
 	}
 
 	tpl, _ := template.ParseFiles(templatePath)
-	err = tpl.Execute(&s.Body, templateContext)
+	err = tpl.Execute(body, templateContext)
 	if err != nil {
 		slog.Error(err.Error())
 		return err
 	}
 	serverAuth := smtp.PlainAuth(s.Config.SMTPIdentity, s.Config.SMTPUsername, s.Config.SMTPPassword, s.Config.SMTPHost)
 
-	err = smtp.SendMail(s.Config.SMTPHost+":"+s.Config.SMTPPort, serverAuth, s.Config.SMTPUsername, []string{s.Config.ContactUsDefaultRecipient}, s.Body.Bytes())
+	err = smtp.SendMail(s.Config.SMTPHost+":"+s.Config.SMTPPort, serverAuth, s.Config.SMTPUsername, []string{s.Config.ContactUsDefaultRecipient}, body.Bytes())
 	if err != nil {
 		slog.Error(err.Error())
 		return err
@@ -90,6 +90,7 @@ Has reached out with the following query
 
 func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+	body := bytes.NewBuffer(nil)
 
 	h := hermes.Hermes{
 		Product: hermes.Product{
@@ -121,7 +122,7 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 		},
 	}
 
-	s.Body.Write([]byte(fmt.Sprintf("Subject: %s  \n%s\n\n", "Welcome to WeCoach.AI -Train Smarter not Harder", mimeHeaders)))
+	body.Write([]byte(fmt.Sprintf("Subject: %s  \n%s\n\n", "Welcome to WeCoach.AI -Train Smarter not Harder", mimeHeaders)))
 
 	emailBody, err := h.GenerateHTML(email)
 	if err != nil {
@@ -136,17 +137,18 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 	}
 
 	tpl, _ := template.ParseFiles(templatePath)
-	err = tpl.Execute(&s.Body, templateContext)
+	err = tpl.Execute(body, templateContext)
 	if err != nil {
 		slog.Error(err.Error())
 		return err
 	}
 	serverAuth := smtp.PlainAuth(s.Config.SMTPIdentity, s.Config.SMTPUsername, s.Config.SMTPPassword, s.Config.SMTPHost)
 
-	err = smtp.SendMail(s.Config.SMTPHost+":"+s.Config.SMTPPort, serverAuth, s.Config.SMTPUsername, []string{s.Config.ContactUsDefaultRecipient}, s.Body.Bytes())
+	err = smtp.SendMail(s.Config.SMTPHost+":"+s.Config.SMTPPort, serverAuth, s.Config.SMTPUsername, []string{s.Config.ContactUsDefaultRecipient}, body.Bytes())
 	if err != nil {
 		slog.Error(err.Error())
 		return err
 	}
+	body.Reset()
 	return nil
 }
