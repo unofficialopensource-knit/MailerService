@@ -1,13 +1,10 @@
 package app_test
 
 import (
-	"context"
 	"os"
 	"testing"
 
 	"github.com/stretchr/testify/suite"
-
-	"github.com/unofficialopensource-knit/MailerService/internal/app"
 )
 
 type ConfigTestSuite struct {
