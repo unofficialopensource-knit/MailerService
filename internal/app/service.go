@@ -115,11 +115,8 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 					"To access your current fitness regime download the AI-powered report card after your fitness test on a monthly basis.",
 					"We're committed to helping you unlock your full potential and achieve your fitness goals. If you have any questions or need assistance, don't hesitate to reach out to our support team at wecoach.ai@gmail.com or contact +91-9953836512.",
 					"Once again, welcome to WeCoach.AI! Get ready to transform your fitness and unleash your best self.",
-					"Best regards,",
-					"Akash Tyagi",
-					"Founder & CEO",
-					"WeCoach.AI",
 				},
+				Signature: "Best regards,<br />Akash Tyagi<br />Founder & CEO<br />WeCoach.AI",
 			},
 		}
 	} else {
@@ -177,11 +174,8 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 				},
 				Outros: []string{
 					"If you have any questions or need assistance, please don't hesitate to reach out to our support team at wecoach.ai@gmail.com or 9953836512.",
-					"Best regards,",
-					"Akash Tyagi",
-					"Founder & CEO",
-					"WeCoach.AI",
 				},
+				Signature: "Best regards,<br />Akash Tyagi<br />Founder & CEO<br />WeCoach.AI",
 			},
 		}
 	}
