@@ -22,12 +22,6 @@ func NewService(conf HTTPConfig) *Service {
 }
 
 func (s *Service) SendContactUsMail(payload ContactUsInput) error {
-	signature := `
-	Best regards,
-	Akash Tyagi
-    Founder & CEO
-    WeCoach.AI
-	`
 	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	body := bytes.NewBuffer(nil)
 
@@ -61,7 +55,7 @@ Has reached out with the following query
 
 {{ .Message }}
 				`,
-			Signature: signature,
+			Signature: "Best regards",
 		},
 	}
 
