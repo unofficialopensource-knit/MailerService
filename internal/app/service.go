@@ -116,6 +116,7 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 	} else {
 		email = hermes.Email{
 			Body: hermes.Body{
+				Name: payload.Name,
 				Intros: []string{
 					"Welcome to WeCoach.AI - the ultimate platform for coaches dedicated to empowering athletes and driving performance excellence using artificial intelligence.",
 					"We're thrilled to have you join our community of passionate coaches, and we're excited to support you in your mission to help athletes reach their full potential.",
