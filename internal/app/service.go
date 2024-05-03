@@ -96,7 +96,7 @@ Has reached out with the following query
 }
 
 func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
-	var intro string
+	var intro []string
 	var content string
 	var outro string
 	signature := `
@@ -109,7 +109,11 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 	WeCoach.AI
 	`
 	if payload.UserType == "student" {
-		intro = "Welcome to WeCoach.AI. We're thrilled to have you on board and excited to embark on this journey toward achieving your fitness goals together. Here's a brief overview to help you navigate through your dashboard."
+		intro = []string{
+			"Welcome to WeCoach.AI",
+			"We're thrilled to have you on board and excited to embark on this journey toward achieving your fitness goals together.",
+			"Here's a brief overview to help you navigate through your dashboard.",
+		}
 		content = `
 		1. **Dashboard Navigation** - Your dashboard is your central hub for accessing all our services and tracking your progress. You'll find tabs for your Profile Information, Update Profile and AI tracker making it easy to stay organized and focused on your goals.
 		2. **AI-Powered Fitness Test** - One of the unique features of our platform is our AI-powered fitness test FlexScore-AI. Our AI Fitness Test analyses various aspects of fitness, including strength, endurance and stamina by using body weight exercises as a metrics.
@@ -125,11 +129,11 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 Once again, welcome to WeCoach.AI! Get ready to transform your fitness and unleash your best self.
 		`
 	} else {
-		intro = `
-		Welcome to WeCoach.AI - the ultimate platform for coaches dedicated to empowering athletes and driving performance excellence using artificial intelligence. We're thrilled to have you join our community of passionate coaches, and we're excited to support you in your mission to help athletes reach their full potential.
-
-		Here's a brief overview to help you navigate through your dashboard and make the most of your experience with WeCoach.AI
-		`
+		intro = []string{
+			"Welcome to WeCoach.AI - the ultimate platform for coaches dedicated to empowering athletes and driving performance excellence using artificial intelligence.",
+			"We're thrilled to have you join our community of passionate coaches, and we're excited to support you in your mission to help athletes reach their full potential.",
+			"Here's a brief overview to help you navigate through your dashboard and make the most of your experience with WeCoach.AI",
+		}
 		content = `
 		1. **Dashboard Overview** - Your dashboard is your command center for managing your coaching activities, and engaging with your athletes. Navigate seamlessly through tabs for athlete profiles, training programs, progress tracking, and more, all in one centralized location.
 		2. **AI-Powered Performance Analysis** - Gain a competitive edge with our AI-powered Fitness test FlexScore AI. Our advanced algorithms analyze athlete data, providing actionable insights into areas of strength, improvement opportunities, and personalized training recommendations.
@@ -167,16 +171,14 @@ Once again, welcome to WeCoach.AI! Get ready to transform your fitness and unlea
 	}
 	templatePath := "/tmp/welcome.html"
 	templateContext := map[string]string{
-		"Intro": intro,
 		"Content": content,
-		"Outro": outro,
+		"Outro":   outro,
 	}
 	email := hermes.Email{
 		Body: hermes.Body{
-			Name: payload.Name,
+			Name:   payload.Name,
+			Intros: intro,
 			FreeMarkdown: `
-			{{ .Intro }}
-
 			{{ .Content }}
 
 			{{ .Outro }}
