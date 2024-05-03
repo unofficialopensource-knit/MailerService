@@ -33,7 +33,7 @@ func (s *Service) SendContactUsMail(payload ContactUsInput) error {
 
 	h := hermes.Hermes{
 		Product: hermes.Product{
-			Name: "Hermes",
+			Name: "WeCoach",
 			Link: "http://wecoach.ai",
 			Logo: "http://wecoach.ai/static/images/logo.png",
 		},
@@ -99,9 +99,12 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 	var intro []string
 	signature := `
 	Best regards,
+
 	Akash Tyagi
-    Founder & CEO
-    WeCoach.AI
+    
+	Founder & CEO
+    
+	WeCoach.AI
 	`
 	if payload.UserType == "student" {
 		intro = []string{
@@ -126,7 +129,7 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 
 	h := hermes.Hermes{
 		Product: hermes.Product{
-			Name: "Hermes",
+			Name: "WeCoach",
 			Link: "http://wecoach.ai",
 			Logo: "http://wecoach.ai/static/images/logo.png",
 		},
