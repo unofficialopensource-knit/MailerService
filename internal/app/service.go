@@ -91,7 +91,6 @@ Has reached out with the following query
 
 func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 	var email hermes.Email
-	slog.Info(payload.Name)
 	if payload.UserType == "student" {
 		email = hermes.Email{
 			Body: hermes.Body{
