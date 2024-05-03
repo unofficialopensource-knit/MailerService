@@ -99,15 +99,6 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 	var intro []string
 	var content string
 	var outro []string
-	signature := `
-	Best regards,
-
-	Akash Tyagi
-    
-	Founder & CEO
-    
-	WeCoach.AI
-	`
 	if payload.UserType == "student" {
 		intro = []string{
 			"Welcome to WeCoach.AI",
@@ -125,6 +116,10 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 			"To access your current fitness regime download the AI-powered report card after your fitness test on a monthly basis.",
 			"We're committed to helping you unlock your full potential and achieve your fitness goals. If you have any questions or need assistance, don't hesitate to reach out to our support team at wecoach.ai@gmail.com or contact +91-9953836512.",
 			"Once again, welcome to WeCoach.AI! Get ready to transform your fitness and unleash your best self.",
+			"Best regards,",
+			"Akash Tyagi",
+			"Founder & CEO",
+			"WeCoach.AI",
 		}
 	} else {
 		intro = []string{
@@ -154,6 +149,10 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 		`
 		outro = []string{
 			"If you have any questions or need assistance, please don't hesitate to reach out to our support team at wecoach.ai@gmail.com or 9953836512.",
+			"Best regards,",
+			"Akash Tyagi",
+			"Founder & CEO",
+			"WeCoach.AI",
 		}
 	}
 
@@ -162,9 +161,10 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 
 	h := hermes.Hermes{
 		Product: hermes.Product{
-			Name: "WeCoach",
-			Link: "http://wecoach.ai",
-			Logo: "http://wecoach.ai/static/images/logo.png",
+			Name:      "WeCoach",
+			Link:      "http://wecoach.ai",
+			Logo:      "http://wecoach.ai/static/images/logo.png",
+			Copyright: "Copyright © Wecoach.AI",
 		},
 	}
 	templatePath := "/tmp/welcome.html"
@@ -178,8 +178,7 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 			FreeMarkdown: `
 			{{ .Content }}
 			`,
-			Outros:    outro,
-			Signature: signature,
+			Outros: outro,
 		},
 	}
 
