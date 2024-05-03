@@ -22,12 +22,6 @@ func NewService(conf HTTPConfig) *Service {
 }
 
 func (s *Service) SendContactUsMail(payload ContactUsInput) error {
-	signature := `
-	Best regards,
-	Akash Tyagi
-    Founder & CEO
-    WeCoach.AI
-	`
 	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	body := bytes.NewBuffer(nil)
 
@@ -61,7 +55,7 @@ Has reached out with the following query
 
 {{ .Message }}
 				`,
-			Signature: signature,
+			Signature: "Best regards",
 		},
 	}
 
@@ -97,13 +91,6 @@ Has reached out with the following query
 
 func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 	var email hermes.Email
-	var signature = `
-	Best regards,
-
-	Akash Tyagi
-	
-	Founder CEO
-	`
 	if payload.UserType == "student" {
 		email = hermes.Email{
 			Body: hermes.Body{
@@ -123,8 +110,7 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 					"We're committed to helping you unlock your full potential and achieve your fitness goals. If you have any questions or need assistance, don't hesitate to reach out to our support team at wecoach.ai@gmail.com or contact +91-9953836512.",
 					"Once again, welcome to WeCoach.AI! Get ready to transform your fitness and unleash your best self.",
 				},
-				Signature: signature,
-				// Signature: "Best regards,<br />Akash Tyagi<br />Founder & CEO<br />WeCoach.AI",
+				Signature: "Best regards",
 			},
 		}
 	} else {
@@ -183,8 +169,7 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 				Outros: []string{
 					"If you have any questions or need assistance, please don't hesitate to reach out to our support team at wecoach.ai@gmail.com or 9953836512.",
 				},
-				Signature: signature,
-				// Signature: "Best regards,<br />Akash Tyagi<br />Founder & CEO<br />WeCoach.AI",
+				Signature: "Best regards",
 			},
 		}
 	}
