@@ -167,25 +167,21 @@ Once again, welcome to WeCoach.AI! Get ready to transform your fitness and unlea
 	}
 	templatePath := "/tmp/welcome.html"
 	templateContext := map[string]string{
-		"Name": payload.Name,
 		"Intro": intro,
 		"Content": content,
 		"Outro": outro,
-		"Signature": signature,
 	}
 	email := hermes.Email{
 		Body: hermes.Body{
+			Name: payload.Name,
 			FreeMarkdown: `
-			{{ .Name }}
-
 			{{ .Intro }}
 
 			{{ .Content }}
 
 			{{ .Outro }}
-
-			{{ .Signature }}
 			`,
+			Signature: signature,
 		},
 	}
 
