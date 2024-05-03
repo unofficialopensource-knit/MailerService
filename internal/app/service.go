@@ -98,7 +98,7 @@ Has reached out with the following query
 func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 	var intro []string
 	var content string
-	var outro string
+	var outro []string
 	signature := `
 	Best regards,
 
@@ -121,13 +121,11 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 		4. We Wellness - Counseling Services for Holistic Well-being. At WeCoach.AI, we understand that success goes beyond physical performance. We are thrilled to introduce 'We Wellness', our counseling service designed to support the mental health and overall well-being of students and their parents. Our expert team of counsellors will help you stay motivated and tackle your day to day problems seamlessly.
 		5. FAI Score - The FAI Score is an indication of your overall fitness level and is bound to improve once you regularly follow the workout regime and nutrition plans with WeCoach.AI
 		`
-		outro = `
-		To access your current fitness regime download the AI-powered report card after your fitness test on a monthly basis.
-
-		We're committed to helping you unlock your full potential and achieve your fitness goals. If you have any questions or need assistance, don't hesitate to reach out to our support team at wecoach.ai@gmail.com or contact +91-9953836512. 
-
-Once again, welcome to WeCoach.AI! Get ready to transform your fitness and unleash your best self.
-		`
+		outro = []string{
+			"To access your current fitness regime download the AI-powered report card after your fitness test on a monthly basis.",
+			"We're committed to helping you unlock your full potential and achieve your fitness goals. If you have any questions or need assistance, don't hesitate to reach out to our support team at wecoach.ai@gmail.com or contact +91-9953836512.",
+			"Once again, welcome to WeCoach.AI! Get ready to transform your fitness and unleash your best self.",
+		}
 	} else {
 		intro = []string{
 			"Welcome to WeCoach.AI - the ultimate platform for coaches dedicated to empowering athletes and driving performance excellence using artificial intelligence.",
@@ -154,9 +152,9 @@ Once again, welcome to WeCoach.AI! Get ready to transform your fitness and unlea
 		|Remote Coaching|Requires in-person presence|Remote monitoring possible|
 
 		`
-		outro = `
-		If you have any questions or need assistance, please don't hesitate to reach out to our support team at wecoach.ai@gmail.com or 9953836512.
-		`
+		outro = []string{
+			"If you have any questions or need assistance, please don't hesitate to reach out to our support team at wecoach.ai@gmail.com or 9953836512.",
+		}
 	}
 
 	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
@@ -172,7 +170,6 @@ Once again, welcome to WeCoach.AI! Get ready to transform your fitness and unlea
 	templatePath := "/tmp/welcome.html"
 	templateContext := map[string]string{
 		"Content": content,
-		"Outro":   outro,
 	}
 	email := hermes.Email{
 		Body: hermes.Body{
@@ -180,9 +177,8 @@ Once again, welcome to WeCoach.AI! Get ready to transform your fitness and unlea
 			Intros: intro,
 			FreeMarkdown: `
 			{{ .Content }}
-
-			{{ .Outro }}
 			`,
+			Outros:    outro,
 			Signature: signature,
 		},
 	}
