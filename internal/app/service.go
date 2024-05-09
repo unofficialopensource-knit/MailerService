@@ -219,3 +219,69 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 	body.Reset()
 	return nil
 }
+
+func (s *Service) SendPasswordResetMail(payload PasswordResetInput) error {
+	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+	body := bytes.NewBuffer(nil)
+
+	h := hermes.Hermes{
+		Product: hermes.Product{
+			Name: "WeCoach",
+			Link: "http://wecoach.ai",
+			Logo: "http://wecoach.ai/static/images/logo.png",
+		},
+	}
+	templatePath := "/tmp/password-reset.html"
+	templateContext := make(map[string]string)
+	email := hermes.Email{
+		Body: hermes.Body{
+			Name: payload.Name,
+			Intros: []string{
+				"You have received this email because a password reset request for Hermes account was received.",
+			},
+			Actions: []hermes.Action{
+				{
+					Instructions: "Click the below button to reset your password.",
+					Button: hermes.Button{
+						Color: "#DC4D2F",
+						Text:  "Password reset",
+						Link:  payload.Link,
+					},
+				},
+			},
+			Outros: []string{
+				"If you did not request a password reset, no further action is required on your part.",
+			},
+			Signature: "Thanks",
+		},
+	}
+	body.Write([]byte(fmt.Sprintf("Subject: %s  \n%s\n\n", "Password Reset Email", mimeHeaders)))
+
+	emailBody, err := h.GenerateHTML(email)
+	if err != nil {
+		slog.Error(err.Error())
+		return err
+	}
+
+	err = os.WriteFile(templatePath, []byte(emailBody), 0666)
+	if err != nil {
+		slog.Error(err.Error())
+		return err
+	}
+
+	tpl, _ := template.ParseFiles(templatePath)
+	err = tpl.Execute(body, templateContext)
+	if err != nil {
+		slog.Error(err.Error())
+		return err
+	}
+	serverAuth := smtp.PlainAuth(s.Config.SMTPIdentity, s.Config.SMTPUsername, s.Config.SMTPPassword, s.Config.SMTPHost)
+
+	err = smtp.SendMail(s.Config.SMTPHost+":"+s.Config.SMTPPort, serverAuth, s.Config.SMTPUsername, []string{payload.Email}, body.Bytes())
+	if err != nil {
+		slog.Error(err.Error())
+		return err
+	}
+	body.Reset()
+	return nil
+}

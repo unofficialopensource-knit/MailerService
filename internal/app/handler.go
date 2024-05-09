@@ -41,3 +41,21 @@ func WelcomeHandler(c *fiber.Ctx) error {
 	}
 	return c.SendStatus(fiber.StatusAccepted)
 }
+
+func PasswordResetHandler(c *fiber.Ctx) error {
+	c.Accepts("application/json")
+
+	var payload PasswordResetInput
+
+	err := c.BodyParser(&payload)
+	if err != nil {
+		slog.Error(err.Error())
+		return fiber.NewError(fiber.StatusUnprocessableEntity)
+	}
+	err = service.SendPasswordResetMail(payload)
+	if err != nil {
+		slog.Error(err.Error())
+		return fiber.NewError(fiber.StatusBadRequest)
+	}
+	return c.SendStatus(fiber.StatusAccepted)
+}
