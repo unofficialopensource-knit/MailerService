@@ -13,3 +13,9 @@ type WelcomeInput struct {
 	UserType string
 	Email    string
 }
+
+type PasswordResetInput struct {
+	Name  string
+	Link  string
+	Email string
+}

@@ -29,6 +29,7 @@ func AppFactory() *fiber.App {
 
 	app.Post("/contact-us", ContactUsHandler)
 	app.Post("/welcome", WelcomeHandler)
+	app.Post("/password-reset", PasswordResetHandler)
 
 	return app
 }
