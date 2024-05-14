@@ -23,13 +23,16 @@ func AppFactory() *fiber.App {
 	service = *NewService(appLocalConfig)
 
 	app := fiber.New(fiberConfig)
-	app.Use(cors.New())
 
+	app.Use(cors.New())
 	app.Use(logger.New())
 
-	app.Post("/contact-us", ContactUsHandler)
-	app.Post("/welcome", WelcomeHandler)
-	app.Post("/password-reset", PasswordResetHandler)
+	api := app.Group("/api")
+	mailer := api.Group("/mailer")
+
+	mailer.Post("/contact-us", ContactUsHandler)
+	mailer.Post("/welcome", WelcomeHandler)
+	mailer.Post("/password-reset", PasswordResetHandler)
 
 	return app
 }
