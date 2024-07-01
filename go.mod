@@ -5,7 +5,7 @@ go 1.22.1
 require (
 	github.com/aws/aws-lambda-go v1.47.0
 	github.com/awslabs/aws-lambda-go-api-proxy v0.16.2
-	github.com/gofiber/fiber/v2 v2.52.4
+	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/matcornic/hermes/v2 v2.1.0
 	github.com/sethvargo/go-envconfig v1.0.3
 	github.com/stretchr/testify v1.9.0
