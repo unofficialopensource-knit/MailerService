@@ -11,7 +11,7 @@ COPY . .
 
 RUN go build -tags jsoniter -o bin/mailer cmd/main.go
 
-FROM golang:1.23.0-alpine
+FROM alpine:latest
 
 WORKDIR /code
 
