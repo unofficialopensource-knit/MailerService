@@ -67,7 +67,7 @@ Has reached out with the following query
 		return err
 	}
 
-	err = os.WriteFile(templatePath, []byte(emailBody), 0666)
+	err = os.WriteFile(templatePath, []byte(emailBody), 0o666)
 	if err != nil {
 		slog.Error(err.Error())
 		return err
@@ -79,9 +79,20 @@ Has reached out with the following query
 		slog.Error(err.Error())
 		return err
 	}
-	serverAuth := smtp.PlainAuth(s.Config.SMTPIdentity, s.Config.SMTPUsername, s.Config.SMTPPassword, s.Config.SMTPHost)
+	serverAuth := smtp.PlainAuth(
+		s.Config.SMTPIdentity,
+		s.Config.SMTPUsername,
+		s.Config.SMTPPassword,
+		s.Config.SMTPHost,
+	)
 
-	err = smtp.SendMail(s.Config.SMTPHost+":"+s.Config.SMTPPort, serverAuth, s.Config.SMTPUsername, []string{s.Config.ContactUsDefaultRecipient}, body.Bytes())
+	err = smtp.SendMail(
+		s.Config.SMTPHost+":"+s.Config.SMTPPort,
+		serverAuth,
+		s.Config.SMTPUsername,
+		[]string{s.Config.ContactUsDefaultRecipient},
+		body.Bytes(),
+	)
 	if err != nil {
 		slog.Error(err.Error())
 		return err
@@ -189,7 +200,15 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 	templateContext := make(map[string]string)
 	templatePath := "/tmp/welcome.html"
 
-	body.Write([]byte(fmt.Sprintf("Subject: %s  \n%s\n\n", "Welcome to WeCoach.AI -Train Smarter not Harder", mimeHeaders)))
+	body.Write(
+		[]byte(
+			fmt.Sprintf(
+				"Subject: %s  \n%s\n\n",
+				"Welcome to WeCoach.AI -Train Smarter not Harder",
+				mimeHeaders,
+			),
+		),
+	)
 
 	emailBody, err := h.GenerateHTML(email)
 	if err != nil {
@@ -197,7 +216,7 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 		return err
 	}
 
-	err = os.WriteFile(templatePath, []byte(emailBody), 0666)
+	err = os.WriteFile(templatePath, []byte(emailBody), 0o666)
 	if err != nil {
 		slog.Error(err.Error())
 		return err
@@ -209,9 +228,20 @@ func (s *Service) SendWelcomeMail(payload WelcomeInput) error {
 		slog.Error(err.Error())
 		return err
 	}
-	serverAuth := smtp.PlainAuth(s.Config.SMTPIdentity, s.Config.SMTPUsername, s.Config.SMTPPassword, s.Config.SMTPHost)
+	serverAuth := smtp.PlainAuth(
+		s.Config.SMTPIdentity,
+		s.Config.SMTPUsername,
+		s.Config.SMTPPassword,
+		s.Config.SMTPHost,
+	)
 
-	err = smtp.SendMail(s.Config.SMTPHost+":"+s.Config.SMTPPort, serverAuth, s.Config.SMTPUsername, []string{payload.Email}, body.Bytes())
+	err = smtp.SendMail(
+		s.Config.SMTPHost+":"+s.Config.SMTPPort,
+		serverAuth,
+		s.Config.SMTPUsername,
+		[]string{payload.Email},
+		body.Bytes(),
+	)
 	if err != nil {
 		slog.Error(err.Error())
 		return err
@@ -263,7 +293,7 @@ func (s *Service) SendPasswordResetMail(payload PasswordResetInput) error {
 		return err
 	}
 
-	err = os.WriteFile(templatePath, []byte(emailBody), 0666)
+	err = os.WriteFile(templatePath, []byte(emailBody), 0o666)
 	if err != nil {
 		slog.Error(err.Error())
 		return err
@@ -275,9 +305,107 @@ func (s *Service) SendPasswordResetMail(payload PasswordResetInput) error {
 		slog.Error(err.Error())
 		return err
 	}
-	serverAuth := smtp.PlainAuth(s.Config.SMTPIdentity, s.Config.SMTPUsername, s.Config.SMTPPassword, s.Config.SMTPHost)
+	serverAuth := smtp.PlainAuth(
+		s.Config.SMTPIdentity,
+		s.Config.SMTPUsername,
+		s.Config.SMTPPassword,
+		s.Config.SMTPHost,
+	)
 
-	err = smtp.SendMail(s.Config.SMTPHost+":"+s.Config.SMTPPort, serverAuth, s.Config.SMTPUsername, []string{payload.Email}, body.Bytes())
+	err = smtp.SendMail(
+		s.Config.SMTPHost+":"+s.Config.SMTPPort,
+		serverAuth,
+		s.Config.SMTPUsername,
+		[]string{payload.Email},
+		body.Bytes(),
+	)
+	if err != nil {
+		slog.Error(err.Error())
+		return err
+	}
+	body.Reset()
+	return nil
+}
+
+func (s *Service) SendOrderStatusMail(payload OrderReceiptInput) error {
+	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+	body := bytes.NewBuffer(nil)
+
+	h := hermes.Hermes{
+		Product: hermes.Product{
+			Name: "WeCoach",
+			Link: "http://wecoach.ai",
+			Logo: "http://wecoach.ai/static/images/logo.png",
+		},
+	}
+	templatePath := "/tmp/order-receipt.html"
+	templateContext := make(map[string]string)
+	statusIntro := "Your subscription has failed"
+	if payload.Status == "authorized" {
+		statusIntro = "Your subscription is successfull"
+	}
+	email := hermes.Email{
+		Body: hermes.Body{
+			Name: payload.Name,
+			Intros: []string{
+				statusIntro,
+			},
+			Table: hermes.Table{
+				Data: [][]hermes.Entry{
+					{
+						{Key: "Plan", Value: payload.PlanName},
+						{Key: "Price", Value: payload.PlanPrice},
+						{Key: "Receipt", Value: payload.Receipt},
+					},
+				},
+				Columns: hermes.Columns{},
+			},
+			Actions: []hermes.Action{
+				{
+					Instructions: "You can check the status of payment, here",
+					Button: hermes.Button{
+						Text: "Go to dashboard",
+						Link: "https://wecoach.ai/student-profile", // TODO:- Add ui url for subscription section
+					},
+				},
+			},
+			Signature: "Thanks",
+		},
+	}
+	body.Write([]byte(fmt.Sprintf("Subject: %s  \n%s\n\n", "Subscription Status", mimeHeaders)))
+
+	emailBody, err := h.GenerateHTML(email)
+	if err != nil {
+		slog.Error(err.Error())
+		return err
+	}
+
+	err = os.WriteFile(templatePath, []byte(emailBody), 0o666)
+	if err != nil {
+		slog.Error(err.Error())
+		return err
+	}
+
+	tpl, _ := template.ParseFiles(templatePath)
+	err = tpl.Execute(body, templateContext)
+	if err != nil {
+		slog.Error(err.Error())
+		return err
+	}
+	serverAuth := smtp.PlainAuth(
+		s.Config.SMTPIdentity,
+		s.Config.SMTPUsername,
+		s.Config.SMTPPassword,
+		s.Config.SMTPHost,
+	)
+
+	err = smtp.SendMail(
+		s.Config.SMTPHost+":"+s.Config.SMTPPort,
+		serverAuth,
+		s.Config.SMTPUsername,
+		[]string{payload.Email},
+		body.Bytes(),
+	)
 	if err != nil {
 		slog.Error(err.Error())
 		return err

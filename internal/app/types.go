@@ -19,3 +19,12 @@ type PasswordResetInput struct {
 	Link  string
 	Email string
 }
+
+type OrderReceiptInput struct {
+	Email     string
+	Status    string
+	Name      string
+	PlanName  string
+	PlanPrice string
+	Receipt   string
+}

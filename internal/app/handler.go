@@ -70,7 +70,7 @@ func OrderReceiptHandler(c *fiber.Ctx) error {
 		slog.Error(err.Error())
 		return fiber.NewError(fiber.StatusUnprocessableEntity)
 	}
-	err = service.SendOrderReceiptMail(payload)
+	err = service.SendOrderStatusMail(payload)
 	if err != nil {
 		slog.Error(err.Error())
 		return fiber.NewError(fiber.StatusBadRequest)
