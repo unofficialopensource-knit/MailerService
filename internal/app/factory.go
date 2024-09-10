@@ -33,6 +33,7 @@ func AppFactory() *fiber.App {
 	mailer.Post("/contact-us", ContactUsHandler)
 	mailer.Post("/welcome", WelcomeHandler)
 	mailer.Post("/password-reset", PasswordResetHandler)
+	mailer.Post("/order", OrderReceiptHandler)
 
 	return app
 }

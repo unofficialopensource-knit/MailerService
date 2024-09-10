@@ -8,7 +8,7 @@ import (
 
 type HTTPConfig struct {
 	LambdaTaskRoot            string `env:"LAMBDA_TASK_ROOT"`
-	BindAddress               string `env:"BIND_ADDR"`
+	BindAddress               string `env:"BIND_ADDRESS"`
 	SMTPIdentity              string `env:"SMTP_IDENTITY, required"`
 	SMTPUsername              string `env:"SMTP_USERNAME, required"`
 	SMTPPassword              string `env:"SMTP_PASSWORD, required"`

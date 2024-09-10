@@ -59,3 +59,21 @@ func PasswordResetHandler(c *fiber.Ctx) error {
 	}
 	return c.SendStatus(fiber.StatusAccepted)
 }
+
+func OrderReceiptHandler(c *fiber.Ctx) error {
+	c.Accepts("application/json")
+
+	var payload OrderReceiptInput
+
+	err := c.BodyParser(&payload)
+	if err != nil {
+		slog.Error(err.Error())
+		return fiber.NewError(fiber.StatusUnprocessableEntity)
+	}
+	err = service.SendOrderStatusMail(payload)
+	if err != nil {
+		slog.Error(err.Error())
+		return fiber.NewError(fiber.StatusBadRequest)
+	}
+	return c.SendStatus(fiber.StatusAccepted)
+}
