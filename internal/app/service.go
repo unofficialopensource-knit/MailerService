@@ -365,7 +365,7 @@ func (s *Service) SendOrderStatusMail(payload OrderReceiptInput) error {
 					Instructions: "You can check the status of payment, here",
 					Button: hermes.Button{
 						Text: "Go to dashboard",
-						Link: "https://wecoach.ai/student-profile", // TODO:- Add ui url for subscription section
+						Link: "https://wecoach.ai/student-profile#subscription",
 					},
 				},
 			},
