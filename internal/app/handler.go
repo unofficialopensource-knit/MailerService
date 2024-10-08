@@ -1,79 +1,106 @@
 package app
 
 import (
+	"encoding/json"
 	"log/slog"
-
-	"github.com/gofiber/fiber/v2"
+	"net/http"
 )
 
-func ContactUsHandler(c *fiber.Ctx) error {
-	c.Accepts("application/json")
-
+func ContactUsHandler(w http.ResponseWriter, r *http.Request) {
 	var payload ContactUsInput
+	if r.Body == nil {
+		slog.Error("Received empty body")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
-	err := c.BodyParser(&payload)
+	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
 		slog.Error(err.Error())
-		return fiber.NewError(fiber.StatusUnprocessableEntity)
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		return
 	}
+
 	err = service.SendContactUsMail(payload)
 	if err != nil {
 		slog.Error(err.Error())
-		return fiber.NewError(fiber.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
-	return c.SendStatus(fiber.StatusAccepted)
+
+	w.WriteHeader(http.StatusAccepted)
 }
 
-func WelcomeHandler(c *fiber.Ctx) error {
-	c.Accepts("application/json")
-
+func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	var payload WelcomeInput
 
-	err := c.BodyParser(&payload)
+	if r.Body == nil {
+		slog.Error("Received empty body")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
 		slog.Error(err.Error())
-		return fiber.NewError(fiber.StatusUnprocessableEntity)
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		return
 	}
+
 	err = service.SendWelcomeMail(payload)
 	if err != nil {
 		slog.Error(err.Error())
-		return fiber.NewError(fiber.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
-	return c.SendStatus(fiber.StatusAccepted)
+	w.WriteHeader(http.StatusAccepted)
 }
 
-func PasswordResetHandler(c *fiber.Ctx) error {
-	c.Accepts("application/json")
-
+func PasswordResetHandler(w http.ResponseWriter, r *http.Request) {
 	var payload PasswordResetInput
 
-	err := c.BodyParser(&payload)
+	if r.Body == nil {
+		slog.Error("Received empty body")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
 		slog.Error(err.Error())
-		return fiber.NewError(fiber.StatusUnprocessableEntity)
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		return
 	}
+
 	err = service.SendPasswordResetMail(payload)
 	if err != nil {
 		slog.Error(err.Error())
-		return fiber.NewError(fiber.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
-	return c.SendStatus(fiber.StatusAccepted)
+	w.WriteHeader(http.StatusAccepted)
 }
 
-func OrderReceiptHandler(c *fiber.Ctx) error {
-	c.Accepts("application/json")
-
+func OrderReceiptHandler(w http.ResponseWriter, r *http.Request) {
 	var payload OrderReceiptInput
+	if r.Body == nil {
+		slog.Error("Received empty body")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
-	err := c.BodyParser(&payload)
+	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
 		slog.Error(err.Error())
-		return fiber.NewError(fiber.StatusUnprocessableEntity)
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		return
 	}
+
 	err = service.SendOrderStatusMail(payload)
 	if err != nil {
 		slog.Error(err.Error())
-		return fiber.NewError(fiber.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
-	return c.SendStatus(fiber.StatusAccepted)
+	w.WriteHeader(http.StatusAccepted)
 }
