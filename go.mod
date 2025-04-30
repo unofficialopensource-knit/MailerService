@@ -1,6 +1,7 @@
 module github.com/unofficialopensource-knit/MailerService
 
 go 1.22.1
+toolchain go1.24.1
 
 require (
 	github.com/aws/aws-lambda-go v1.47.0
@@ -33,7 +34,7 @@ require (
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
 	github.com/vanng822/css v1.0.1 // indirect
 	github.com/vanng822/go-premailer v1.20.2 // indirect
-	golang.org/x/crypto v0.22.0 // indirect
+	golang.org/x/crypto v0.35.0 // indirect
 	golang.org/x/net v0.24.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
