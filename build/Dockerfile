@@ -1,4 +1,4 @@
-FROM golang:1.23.3-alpine as builder
+FROM golang:1.24.3-alpine as builder
 
 WORKDIR /code
 
@@ -11,7 +11,7 @@ COPY . .
 
 RUN go build -tags jsoniter -o bin/mailer cmd/main.go
 
-FROM alpine:3.20.3
+FROM alpine:3.21.3
 
 WORKDIR /code
 
