@@ -59,14 +59,14 @@ jobs:
         with:
           ecr: true
           logout: true
-          registry: 505875808047.dkr.ecr.ap-south-1.amazonaws.com
+          registry: 505875808047.dkr.ecr.ap-south-1.amazonaws.com/mailer-service
       - name: Checkout
         uses: actions/checkout@v6
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: 505875808047.dkr.ecr.ap-south-1.amazonaws.com/wecoach-mailer-service
+          images: 505875808047.dkr.ecr.ap-south-1.amazonaws.com/mailer-service
           tags: type=sha
       - name: Build
         run: docker image build --file build/Dockerfile --tag ${{ steps.meta.outputs.tags }} .
