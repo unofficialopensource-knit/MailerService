@@ -55,7 +55,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
       - name: Login to Amazon ECR
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           ecr: true
           logout: true
