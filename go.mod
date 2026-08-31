@@ -1,9 +1,9 @@
 module github.com/unofficialopensource-knit/MailerService
 
-go 1.22.1
+go 1.26
 
 require (
-	github.com/aws/aws-lambda-go v1.54.0
+	github.com/aws/aws-lambda-go v1.55.0
 	github.com/awslabs/aws-lambda-go-api-proxy v0.16.2
 	github.com/matcornic/hermes/v2 v2.1.0
 	github.com/sethvargo/go-envconfig v1.3.0
